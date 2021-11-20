@@ -1,2 +1,4 @@
-# 2021-11-otus-spring-Sokolov
-Репозитарий по курсу Spring Framework
+# Соколов Георгий Вячеславович
+# Spring Framework 
+# 2021-11
+Домашние работы по курсу Spring Framework
