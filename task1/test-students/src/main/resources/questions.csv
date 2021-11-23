@@ -1,0 +1,14 @@
+Under what conditions is an object's finalize() method invoked by the garbage collector?;CHOICE;When it detects that the object has become unreachable.|As soon as object is set as null.|At fixed intervalm it checks for null value.|None of the above.
+What is a transient variable?;CHOICE;A transient variable is a variable which is serialized during Serialization.|A transient variable is a variable that may not be serialized during Serialization.|A transient variable is a variable which is to be marked as serializable.|None of the above.
+What is inheritance?;CHOICE;It is the process where one object acquires the properties of another.|inheritance is the ability of an object to take on many forms.|inheritance is a technique to define different methods of same type.|None of the above.
+Which of the following is true about String?;CHOICE;String is mutable.|String is immutable.|String is a data type.|None of the above.
+What is polymorphism?;CHOICE;Polymorphism is a technique to define different objects of same type.|Polymorphism is the ability of an object to take on many forms.|Polymorphism is a technique to define different methods of same type.|None of the above.
+What of the following is the default value of an instance variable?;CHOICE;null|0|Depends upon the type of variable| Not assigned
+What is instance variable?;CHOICE;Instance variables are static variables within a class but outside any method.|Instance variables are variables defined inside methods, constructors or blocks.|Instance variables are variables within a class but outside any method.|None of the above.
+This is the parent of Error and Exception classes.;CHOICE;Throwable|Catchable|MainError|MainException
+When finally block gets executed?;CHOICE;Always when try block get executed, no matter exception occured or not.|Always when a method get executed, no matter exception occured or not.|Always when a try block get executed, if exception do not occur.|Only when exception occurs in try block code.
+Method Overloading is an example of;CHOICE;Static Binding.|Dynamic Binding.|Both of the above.|None of the above.
+Which two classes are not inherited from Object?;FREE;
+What are access modifiers?;FREE;
+What is method overloading?;FREE;
+What is the default method in Interface?;FREE;
