@@ -1,10 +1,10 @@
-package ru.otus.teststudents.dao;
+package ru.otus.teststudents.service;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.otus.teststudents.domain.Question;
 
-@Component
-public class PublisherDaoConsole implements PublisherDao {
+@Service
+public class PublisherServiceConsole implements PublisherService {
 
     @Override
     public void publishStart() {

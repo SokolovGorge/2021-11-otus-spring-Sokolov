@@ -1,12 +1,12 @@
-package ru.otus.teststudents.dao;
+package ru.otus.teststudents.service;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.otus.teststudents.domain.Question;
 
 import java.util.Scanner;
 
-@Component
-public class ReaderAnswerDaoConsole implements ReaderAnswerDao {
+@Service
+public class ReaderAnswerServiceConsole implements ReaderAnswerService {
 
     private final Scanner scanner = new Scanner(System.in);
 

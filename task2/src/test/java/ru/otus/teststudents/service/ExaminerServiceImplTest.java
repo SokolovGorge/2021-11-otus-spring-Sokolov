@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.teststudents.dao.PublisherDao;
-import ru.otus.teststudents.dao.ReaderAnswerDao;
 import ru.otus.teststudents.dao.ReaderQuestionsDao;
 import ru.otus.teststudents.domain.Question;
 
@@ -23,9 +21,9 @@ class ExaminerServiceImplTest {
     @Mock
     private ReaderQuestionsDao readerQuestionsDao;
     @Mock
-    private ReaderAnswerDao readerAnswerDao;
+    private ReaderAnswerService readerAnswerDao;
     @Mock
-    private PublisherDao publisherDao;
+    private PublisherService publisherDao;
 
 
     private ExaminerService instance;

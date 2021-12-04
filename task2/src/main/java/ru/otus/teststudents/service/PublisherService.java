@@ -1,8 +1,8 @@
-package ru.otus.teststudents.dao;
+package ru.otus.teststudents.service;
 
 import ru.otus.teststudents.domain.Question;
 
-public interface PublisherDao {
+public interface PublisherService {
 
     void publishStart();
 

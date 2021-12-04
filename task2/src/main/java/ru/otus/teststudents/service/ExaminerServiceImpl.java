@@ -2,8 +2,6 @@ package ru.otus.teststudents.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.otus.teststudents.dao.PublisherDao;
-import ru.otus.teststudents.dao.ReaderAnswerDao;
 import ru.otus.teststudents.dao.ReaderQuestionsDao;
 import ru.otus.teststudents.domain.Question;
 
@@ -13,28 +11,28 @@ import java.util.List;
 public class ExaminerServiceImpl implements ExaminerService {
 
     private ReaderQuestionsDao readerQuestionsDao;
-    private ReaderAnswerDao readerAnswerDao;
-    private PublisherDao publisherDao;
+    private ReaderAnswerService readerAnswerService;
+    private PublisherService publisherService;
     private int passingCount;
 
     public ExaminerServiceImpl(ReaderQuestionsDao readerQuestionsDao,
-                               ReaderAnswerDao readerAnswerDao,
-                               PublisherDao publisherDao,
+                               ReaderAnswerService readerAnswerDao,
+                               PublisherService publisherDao,
                                @Value("${test.passCount}") int passingCount) {
         this.readerQuestionsDao = readerQuestionsDao;
-        this.readerAnswerDao = readerAnswerDao;
-        this.publisherDao = publisherDao;
+        this.readerAnswerService = readerAnswerDao;
+        this.publisherService = publisherDao;
         this.passingCount = passingCount;
     }
 
     @Override
     public int exam() {
         int goodAnswersCount = 0;
-        publisherDao.publishStart();
+        publisherService.publishStart();
         List<Question> questions = readerQuestionsDao.readQuestions();
         for (Question question : questions) {
-            publisherDao.publishQuestion(question);
-            String answer = readerAnswerDao.request(question);
+            publisherService.publishQuestion(question);
+            String answer = readerAnswerService.request(question);
             if (question.getRightAnswer().equals(answer)) {
                 goodAnswersCount++;
             }
@@ -50,7 +48,7 @@ public class ExaminerServiceImpl implements ExaminerService {
 
     @Override
     public void publishResult(boolean result) {
-        publisherDao.publishResult(result);
+        publisherService.publishResult(result);
     }
 
 }
