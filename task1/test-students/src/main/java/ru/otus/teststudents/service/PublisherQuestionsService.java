@@ -1,10 +1,10 @@
-package ru.otus.teststudents.dao;
+package ru.otus.teststudents.service;
 
 import ru.otus.teststudents.domain.Question;
 
 import java.util.List;
 
-public interface PublisherQuestionsDao {
+public interface PublisherQuestionsService {
 
     void publishQuestions(List<Question> quesions);
 }

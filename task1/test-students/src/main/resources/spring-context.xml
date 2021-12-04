@@ -12,12 +12,12 @@
         <constructor-arg ref="questionBuilder"/>
     </bean>
 
-    <bean id="publisherQuestionsDao" class="ru.otus.teststudents.dao.PublisherQuestionsDaoConsole">
+    <bean id="publisherQuestionsService" class="ru.otus.teststudents.service.PublisherQuestionsServiceConsole">
     </bean>
 
     <bean id="studentsService" class="ru.otus.teststudents.service.StudentsServiceImpl">
         <constructor-arg name="readerQuestionsDao" ref="readerQuestionsDao"/>
-        <constructor-arg name="publisherQuestionsDao" ref="publisherQuestionsDao"/>
+        <constructor-arg name="publisherQuestionsService" ref="publisherQuestionsService"/>
     </bean>
 
 </beans>

@@ -1,10 +1,10 @@
-package ru.otus.teststudents.dao;
+package ru.otus.teststudents.service;
 
 import ru.otus.teststudents.domain.Question;
 
 import java.util.List;
 
-public class PublisherQuestionsDaoConsole implements PublisherQuestionsDao {
+public class PublisherQuestionsServiceConsole implements PublisherQuestionsService {
 
     @Override
     public void publishQuestions(List<Question> quesions) {
