@@ -3,7 +3,9 @@ package ru.otus.teststudents.dao;
 import ru.otus.teststudents.domain.Question;
 import ru.otus.teststudents.exceptions.QuestionException;
 
-public interface QuestionBuilder {
+import java.util.List;
 
-    Question build(String[] values) throws QuestionException;
+public interface QuestionsDao {
+
+    List<Question> readQuestions() throws QuestionException;
 }

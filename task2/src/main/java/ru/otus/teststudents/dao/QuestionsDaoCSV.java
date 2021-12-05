@@ -7,6 +7,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.otus.teststudents.domain.Question;
+import ru.otus.teststudents.exceptions.QuestionException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,18 +16,18 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class ReaderQuestionsDaoCSV implements ReaderQuestionsDao {
+public class QuestionsDaoCSV implements QuestionsDao {
 
     private final String csvFileName;
     private final QuestionBuilder questionBuilder;
 
-    public ReaderQuestionsDaoCSV(@Value("${test.question.filename}") String csvFileName, QuestionBuilder questionBuilder) {
+    public QuestionsDaoCSV(@Value("${test.question.filename}") String csvFileName, QuestionBuilder questionBuilder) {
         this.csvFileName = csvFileName;
         this.questionBuilder = questionBuilder;
     }
 
     @Override
-    public List<Question> readQuestions() {
+    public List<Question> readQuestions() throws QuestionException {
         CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
         try (var br = new InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(csvFileName)));
              var reader = new CSVReaderBuilder(br).withCSVParser(parser)
@@ -38,9 +39,9 @@ public class ReaderQuestionsDaoCSV implements ReaderQuestionsDao {
             }
             return result;
         } catch (IOException e) {
-            throw new RuntimeException("IO error", e);
+            throw new QuestionException("IO error", e);
         } catch (CsvValidationException e) {
-            throw new RuntimeException("CSV validation error", e);
+            throw new QuestionException("CSV validation error", e);
         }
     }
 

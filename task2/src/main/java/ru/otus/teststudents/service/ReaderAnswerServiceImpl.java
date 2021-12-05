@@ -3,20 +3,24 @@ package ru.otus.teststudents.service;
 import org.springframework.stereotype.Service;
 import ru.otus.teststudents.domain.Question;
 
-import java.util.Scanner;
-
 @Service
-public class ReaderAnswerServiceConsole implements ReaderAnswerService {
+public class ReaderAnswerServiceImpl implements ReaderAnswerService {
 
-    private final Scanner scanner = new Scanner(System.in);
+    private final ReaderService readerService;
+    private final WriterService writerService;
+
+    public ReaderAnswerServiceImpl(ReaderService readerService, WriterService writerService) {
+        this.readerService = readerService;
+        this.writerService = writerService;
+    }
 
     @Override
     public String request(Question question) {
-        System.out.print("Enter number of choice:");
+        writerService.print("Enter number of choice:");
         int choice = readAnswer(question);
         if (choice < 0) {
             do {
-                System.out.print("Invalid choice, try again:");
+                writerService.print("Invalid choice, try again:");
                 choice = readAnswer(question);
             } while (choice < 0);
         }
@@ -24,9 +28,9 @@ public class ReaderAnswerServiceConsole implements ReaderAnswerService {
     }
 
     private int readAnswer(Question question) {
-        String answer = scanner.next();
+        String answer = readerService.read();
         try {
-            int choice = Integer.valueOf(answer);
+            int choice = Integer.parseInt(answer);
             if (choice > 0 && choice <= question.getAnswers().size()) {
                 return choice;
             }
