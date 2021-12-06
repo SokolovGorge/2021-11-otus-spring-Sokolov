@@ -2,6 +2,7 @@ package ru.otus.teststudents.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.otus.teststudents.domain.Answer;
 import ru.otus.teststudents.domain.Question;
 import ru.otus.teststudents.exceptions.QuestionException;
 
@@ -17,8 +18,8 @@ class QuestionBuilderCSVTest {
     @DisplayName("Создание Question")
     @Test
     void buildTest() {
-        String[] csvStrings = new String[]{"Question1", "Answer1|Answer2", "Answer1"};
-        Question expQuestion = new Question("Question1", Arrays.asList("Answer1", "Answer2"), "Answer1");
+        String[] csvStrings = new String[]{"Question1", "1Answer1|0Answer2"};
+        Question expQuestion = new Question("Question1", Arrays.asList(new Answer("Answer1", true), new Answer("Answer2", false)));
         try {
             Question question =  instance.build(csvStrings);
             assertEquals(expQuestion, question);
@@ -31,8 +32,8 @@ class QuestionBuilderCSVTest {
     @Test
     void exceptionTest() {
         Exception exception = assertThrows(QuestionException.class,
-                () -> instance.build(new String[]{"Test1", "Test2"}));
-        assertTrue(exception.getMessage().endsWith("length not equal 3"));
+                () -> instance.build(new String[]{"Test1", "Test2", "Test3"}));
+        assertTrue(exception.getMessage().endsWith("length not equal 2"));
 
     }
 

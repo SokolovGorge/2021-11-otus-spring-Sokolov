@@ -4,10 +4,6 @@ import ru.otus.teststudents.exceptions.QuestionException;
 
 public interface ExaminerService {
 
+    void exam();
 
-    int exam() throws QuestionException;
-
-    boolean estimationExam(int goodAnswers);
-
-    void publishResult(boolean result);
 }

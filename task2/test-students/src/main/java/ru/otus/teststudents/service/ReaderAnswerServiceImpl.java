@@ -1,6 +1,7 @@
 package ru.otus.teststudents.service;
 
 import org.springframework.stereotype.Service;
+import ru.otus.teststudents.domain.Answer;
 import ru.otus.teststudents.domain.Question;
 
 @Service
@@ -15,7 +16,7 @@ public class ReaderAnswerServiceImpl implements ReaderAnswerService {
     }
 
     @Override
-    public String request(Question question) {
+    public Answer request(Question question) {
         writerService.print("Enter number of choice:");
         int choice = readAnswer(question);
         if (choice < 0) {
