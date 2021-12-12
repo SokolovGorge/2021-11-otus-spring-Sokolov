@@ -1,0 +1,15 @@
+spring:
+  messages:
+    basename: i18n/messages
+    fallback-to-system-locale: false
+test:
+  question-filename: questions.csv
+  passCount: 3
+  locale-def: en-EN
+  locale-map:
+    ru: ru-RU
+    ru-ru: ru-RU
+    ru_ru: ru-RU
+    en: en-EN
+    en-en: en-EN
+    en_en: en-EN
