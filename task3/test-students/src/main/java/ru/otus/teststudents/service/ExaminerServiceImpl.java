@@ -1,15 +1,13 @@
 package ru.otus.teststudents.service;
 
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import ru.otus.teststudents.config.AppConfig;
+import ru.otus.teststudents.config.ExamConfig;
 import ru.otus.teststudents.dao.QuestionsDao;
 import ru.otus.teststudents.domain.Answer;
 import ru.otus.teststudents.domain.Question;
 import ru.otus.teststudents.exceptions.QuestionException;
 
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class ExaminerServiceImpl implements ExaminerService {
@@ -17,62 +15,62 @@ public class ExaminerServiceImpl implements ExaminerService {
     private final QuestionsDao questionsDao;
     private final ReaderAnswerService readerAnswerService;
     private final WriterService writerService;
-    private final AppConfig appConfig;
-    private final LocaleProvider localeProvider;
-    private final MessageSource messageSource;
+    private final MessageService messageService;
+    private final LocaleSelectionService localeSelection;
+    private final ExamConfig examConfig;
 
     public ExaminerServiceImpl(QuestionsDao questionsDao,
                                ReaderAnswerService readerAnswerService,
                                WriterService writerService,
-                               AppConfig appConfig,
-                               LocaleProvider localeProvider,
-                               MessageSource messageSource) {
+                               ExamConfig examConfig,
+                               MessageService messageService,
+                               LocaleSelectionService localeSelection) {
         this.questionsDao = questionsDao;
         this.readerAnswerService = readerAnswerService;
         this.writerService = writerService;
-        this.appConfig = appConfig;
-        this.localeProvider = localeProvider;
-        this.messageSource = messageSource;
+        this.examConfig = examConfig;
+        this.messageService = messageService;
+        this.localeSelection = localeSelection;
     }
 
     @Override
     public void exam() {
-        Locale locale = localeProvider.getLocale();
+        localeSelection.selectLocale();
         try {
             int goodAnswersCount = 0;
-            printExamStart(locale);
-            List<Question> questions = questionsDao.readQuestions(locale);
+            printExamStart();
+            List<Question> questions = questionsDao.readQuestions();
             for (Question question : questions) {
-                printQuestion(question, locale);
-                Answer answer = readerAnswerService.request(question, locale);
+                printQuestion(question);
+                Answer answer = readerAnswerService.request(question);
                 if (answer.isCorrect()) {
                     goodAnswersCount++;
                 }
             }
-            printResult(goodAnswersCount >= appConfig.getPassCount(), locale);
+            printResult(goodAnswersCount >= examConfig.getPassCount());
         } catch (QuestionException ex) {
-            writerService.println(messageSource.getMessage("info.error", new String[]{ex.getLocalizedMessage()}, locale));
+            writerService.println(messageService.getMessage("info.error", new String[]{ex.getLocalizedMessage()}));
         }
     }
 
-    private void printExamStart(Locale locale) {
-        writerService.println("*********************** "+ messageSource.getMessage("info.start-examination", null, locale) + " *********************************");
+    private void printExamStart() {
+        writerService.println("*********************** " + messageService.getMessage("info.start-examination", null) + " *********************************");
     }
 
-    private void printQuestion(Question question, Locale locale) {
-        writerService.println(messageSource.getMessage("info.question", null, locale) + ": " + question.getQuestion());
-        writerService.println(messageSource.getMessage("info.answer-choice", null, locale));
+    private void printQuestion(Question question) {
+        writerService.println(messageService.getMessage("info.question", null) + ": " + question.getQuestion());
+        writerService.println(messageService.getMessage("info.answer-choice", null));
         for (int i = 0; i < question.getAnswers().size(); i++) {
             writerService.println(i + 1 + ". " + question.getAnswers().get(i).getAnswer());
         }
     }
 
-    private void printResult(boolean result, Locale locale) {
-        writerService.println("*********************** " + messageSource.getMessage("info.end-examination", null, locale) + " *********************************");
+    private void printResult(boolean result) {
+        writerService.println("*********************** " + messageService.getMessage("info.end-examination", null) + " *********************************");
         if (result) {
-            writerService.println(messageSource.getMessage("info.result-success", null, locale));
+            writerService.println(messageService.getMessage("info.result-success", null));
         } else {
-            writerService.println(messageSource.getMessage("info.result-fault", null, locale));
+            writerService.println(messageService.getMessage("info.result-fault", null));
         }
         writerService.println("*************************************************************************");
     }

@@ -6,9 +6,10 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import ru.otus.teststudents.config.AppConfig;
+import ru.otus.teststudents.config.QuestionConfig;
 import ru.otus.teststudents.domain.Question;
 import ru.otus.teststudents.exceptions.QuestionException;
+import ru.otus.teststudents.service.LocaleSelectionService;
 import ru.otus.teststudents.stereotype.LogEnable;
 
 import java.io.IOException;
@@ -22,19 +23,21 @@ import java.util.Locale;
 public class QuestionsDaoCSV implements QuestionsDao {
 
     private final QuestionBuilder questionBuilder;
-    private final AppConfig appConfig;
+    private final LocaleSelectionService localeSelection;
+    private final QuestionConfig questionConfig;
 
-    public QuestionsDaoCSV(QuestionBuilder questionBuilder, AppConfig appConfig) {
+    public QuestionsDaoCSV(QuestionBuilder questionBuilder, LocaleSelectionService localeSelection, QuestionConfig questionConfig) {
 
         this.questionBuilder = questionBuilder;
-        this.appConfig = appConfig;
+        this.localeSelection = localeSelection;
+        this.questionConfig = questionConfig;
     }
 
     @LogEnable
     @Override
-    public List<Question> readQuestions(Locale locale) throws QuestionException {
+    public List<Question> readQuestions() throws QuestionException {
         CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
-        try (var br = new InputStreamReader(getResourceStream(getLocaleFileName(locale)));
+        try (var br = new InputStreamReader(getResourceStream(getLocaleFileName()));
              var reader = new CSVReaderBuilder(br).withCSVParser(parser).build()) {
             List<Question> result = new ArrayList<>();
             String[] values;
@@ -49,13 +52,13 @@ public class QuestionsDaoCSV implements QuestionsDao {
         }
     }
 
-    private String getLocaleFileName(Locale locale) {
-        String fileName = appConfig.getQuestionFilename();
-        if (null == locale || null == locale.getCountry() || null == locale.getCountry()) {
+    private String getLocaleFileName() {
+        Locale locale = localeSelection.getCurrentLocale();
+        String fileName = questionConfig.getQuestionFilename();
+        if (null == locale || null == locale.getLanguage() || null == locale.getCountry()) {
             return fileName;
         }
-        String result = StringUtils.stripFilenameExtension(fileName) + "_" + locale.getLanguage() + "_" + locale.getCountry() + "." + StringUtils.getFilenameExtension(fileName);
-        return result;
+        return StringUtils.stripFilenameExtension(fileName) + "_" + locale.getLanguage() + "_" + locale.getCountry() + "." + StringUtils.getFilenameExtension(fileName);
     }
 
     private InputStream getResourceStream(String fileName) throws QuestionException {

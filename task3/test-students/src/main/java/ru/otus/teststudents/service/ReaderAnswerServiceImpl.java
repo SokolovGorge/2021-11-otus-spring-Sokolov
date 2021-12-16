@@ -1,32 +1,30 @@
 package ru.otus.teststudents.service;
 
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.teststudents.domain.Answer;
 import ru.otus.teststudents.domain.Question;
-
-import java.util.Locale;
 
 @Service
 public class ReaderAnswerServiceImpl implements ReaderAnswerService {
 
     private final ReaderService readerService;
+    private final MessageService messageService;
     private final WriterService writerService;
-    private final MessageSource messageSource;
 
-    public ReaderAnswerServiceImpl(ReaderService readerService, WriterService writerService, MessageSource messageSource) {
+
+    public ReaderAnswerServiceImpl(ReaderService readerService, WriterService writerService, MessageService messageService) {
         this.readerService = readerService;
         this.writerService = writerService;
-        this.messageSource = messageSource;
+        this.messageService = messageService;
     }
 
     @Override
-    public Answer request(Question question, Locale locale) {
-        writerService.print(messageSource.getMessage("prompt.enter-number", null, locale) + ":");
+    public Answer request(Question question) {
+        writerService.print(messageService.getMessage("prompt.enter-number", null) + ":");
         int choice = readAnswer(question);
         if (choice < 0) {
             do {
-                writerService.print(messageSource.getMessage("prompt.invalid-choice", null, locale) + ":");
+                writerService.print(messageService.getMessage("prompt.invalid-choice", null) + ":");
                 choice = readAnswer(question);
             } while (choice < 0);
         }
