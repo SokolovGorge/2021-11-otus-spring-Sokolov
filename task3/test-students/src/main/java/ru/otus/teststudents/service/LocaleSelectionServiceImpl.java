@@ -12,7 +12,6 @@ public class LocaleSelectionServiceImpl implements LocaleSelectionService {
     private final WriterService writerService;
     private final ReaderService readerService;
     private final LocaleConfig localeConfig;
-    private Locale currentLocale;
 
     public LocaleSelectionServiceImpl(WriterService writerService, ReaderService readerService, LocaleConfig localeConfig) {
         this.writerService = writerService;
@@ -34,10 +33,7 @@ public class LocaleSelectionServiceImpl implements LocaleSelectionService {
         } else {
             locale = Locale.forLanguageTag(codeLang);
         }
-        currentLocale = locale;
+        localeConfig.setCurrentLocale(locale);
     }
 
-    public Locale getCurrentLocale() {
-        return currentLocale;
-    }
 }

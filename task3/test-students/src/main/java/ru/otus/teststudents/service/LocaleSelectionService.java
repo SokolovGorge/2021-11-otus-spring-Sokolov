@@ -6,6 +6,4 @@ public interface LocaleSelectionService {
 
     void selectLocale();
 
-    Locale getCurrentLocale();
-
 }

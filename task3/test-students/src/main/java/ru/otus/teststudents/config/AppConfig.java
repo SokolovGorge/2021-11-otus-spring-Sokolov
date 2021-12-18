@@ -7,7 +7,7 @@ import java.util.Map;
 
 @ConfigurationProperties(prefix = "test")
 @Component
-public class AppConfig implements QuestionConfig, LocaleConfig, ExamConfig {
+public class AppConfig implements QuestionConfig, ExamConfig {
 
     private Map<String, String> localeMap;
 
@@ -17,7 +17,6 @@ public class AppConfig implements QuestionConfig, LocaleConfig, ExamConfig {
 
     private int passCount;
 
-    @Override
     public Map<String, String> getLocaleMap() {
         return localeMap;
     }
@@ -26,7 +25,6 @@ public class AppConfig implements QuestionConfig, LocaleConfig, ExamConfig {
         this.localeMap = localeMap;
     }
 
-    @Override
     public String getLocaleDef() {
         return localeDef;
     }

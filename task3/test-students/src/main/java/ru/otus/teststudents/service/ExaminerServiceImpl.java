@@ -49,7 +49,7 @@ public class ExaminerServiceImpl implements ExaminerService {
             }
             printResult(goodAnswersCount >= examConfig.getPassCount());
         } catch (QuestionException ex) {
-            writerService.println(messageService.getMessage("info.error", new String[]{ex.getLocalizedMessage()}));
+            writerService.println(messageService.getMessage("info.error", ex.getLocalizedMessage()));
         }
     }
 
@@ -58,19 +58,19 @@ public class ExaminerServiceImpl implements ExaminerService {
     }
 
     private void printQuestion(Question question) {
-        writerService.println(messageService.getMessage("info.question", null) + ": " + question.getQuestion());
-        writerService.println(messageService.getMessage("info.answer-choice", null));
+        writerService.println(messageService.getMessage("info.question") + ": " + question.getQuestion());
+        writerService.println(messageService.getMessage("info.answer-choice"));
         for (int i = 0; i < question.getAnswers().size(); i++) {
             writerService.println(i + 1 + ". " + question.getAnswers().get(i).getAnswer());
         }
     }
 
     private void printResult(boolean result) {
-        writerService.println("*********************** " + messageService.getMessage("info.end-examination", null) + " *********************************");
+        writerService.println("*********************** " + messageService.getMessage("info.end-examination") + " *********************************");
         if (result) {
-            writerService.println(messageService.getMessage("info.result-success", null));
+            writerService.println(messageService.getMessage("info.result-success"));
         } else {
-            writerService.println(messageService.getMessage("info.result-fault", null));
+            writerService.println(messageService.getMessage("info.result-fault"));
         }
         writerService.println("*************************************************************************");
     }
