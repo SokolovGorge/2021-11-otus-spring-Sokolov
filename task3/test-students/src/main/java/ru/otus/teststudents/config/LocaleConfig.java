@@ -12,6 +12,4 @@ public interface LocaleConfig {
     Locale getCurrentLocale();
 
     void setCurrentLocale(Locale locale);
-
-    String getQuestionFileName();
 }

@@ -37,13 +37,4 @@ public class LocaleConfigImpl implements LocaleConfig {
         this.currentLocale = locale;
     }
 
-    @Override
-    public String getQuestionFileName() {
-        String fileName = appConfig.getQuestionFilename();
-        if (null == currentLocale || null == currentLocale.getLanguage() || null == currentLocale.getCountry()) {
-            return fileName;
-        }
-        return StringUtils.stripFilenameExtension(fileName) + "_" + currentLocale.getLanguage() + "_" + currentLocale.getCountry() + "." + StringUtils.getFilenameExtension(fileName);
-    }
-
 }

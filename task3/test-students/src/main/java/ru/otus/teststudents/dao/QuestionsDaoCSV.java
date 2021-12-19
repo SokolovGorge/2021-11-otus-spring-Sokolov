@@ -5,7 +5,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.stereotype.Component;
-import ru.otus.teststudents.config.LocaleConfig;
+import ru.otus.teststudents.config.QuestionStorageConfig;
 import ru.otus.teststudents.domain.Question;
 import ru.otus.teststudents.exceptions.QuestionException;
 import ru.otus.teststudents.stereotype.LogEnable;
@@ -19,11 +19,11 @@ import java.util.List;
 @Component
 public class QuestionsDaoCSV implements QuestionsDao {
 
-    private final LocaleConfig localeConfig;
+    private final QuestionStorageConfig storageConfig;
     private final QuestionBuilder questionBuilder;
 
-    public QuestionsDaoCSV(LocaleConfig localeConfig, QuestionBuilder questionBuilder) {
-        this.localeConfig = localeConfig;
+    public QuestionsDaoCSV(QuestionStorageConfig storageConfig, QuestionBuilder questionBuilder) {
+        this.storageConfig = storageConfig;
         this.questionBuilder = questionBuilder;
     }
 
@@ -31,7 +31,7 @@ public class QuestionsDaoCSV implements QuestionsDao {
     @Override
     public List<Question> readQuestions() throws QuestionException {
         CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
-        try (var br = new InputStreamReader(getResourceStream(localeConfig.getQuestionFileName()));
+        try (var br = new InputStreamReader(getResourceStream(storageConfig.getQuestionFileName()));
              var reader = new CSVReaderBuilder(br).withCSVParser(parser).build()) {
             List<Question> result = new ArrayList<>();
             String[] values;
