@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.jdbclibrary.domain.Genre;
 
@@ -19,10 +20,11 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 class GenreDaoJdbcTest {
 
     private static final long EXPECTED_GENRE_COUNT = 2;
-    private static final long EXISTING_GENRE_ID = 1;
+    private static final long EXISTING_GENRE_ID1 = 1;
+    private static final long EXISTING_GENRE_ID2 = 2;
     private static final String EXISTING_GENRE_NAME = "Детектив";
 
-    private static final Genre existingGenre = new Genre(EXISTING_GENRE_ID, EXISTING_GENRE_NAME);
+    private static final Genre existingGenre = new Genre(EXISTING_GENRE_ID1, EXISTING_GENRE_NAME);
 
     @Autowired
     private GenreDaoJdbc genreDao;
@@ -47,16 +49,16 @@ class GenreDaoJdbcTest {
     @DisplayName("Обновить жанр в БД")
     @Test
     void shouldUpdateGenre() {
-        Genre updatingGenre = new Genre(EXISTING_GENRE_ID, "Чтиво");
+        Genre updatingGenre = new Genre(EXISTING_GENRE_ID1, "Чтиво");
         genreDao.update(updatingGenre);
-        Genre actualGenre = genreDao.getById(EXISTING_GENRE_ID);
+        Genre actualGenre = genreDao.getById(EXISTING_GENRE_ID1);
         assertThat(actualGenre).usingRecursiveComparison().isEqualTo(updatingGenre);
     }
 
     @DisplayName("Возвращать жанр по id")
     @Test
     void shouldReturnExpectedGenreById() {
-        Genre actualGenre = genreDao.getById(EXISTING_GENRE_ID);
+        Genre actualGenre = genreDao.getById(EXISTING_GENRE_ID1);
         assertThat(actualGenre).usingRecursiveComparison().isEqualTo(existingGenre);
     }
 
@@ -70,10 +72,13 @@ class GenreDaoJdbcTest {
     @DisplayName("Удалить заданный жанр по id")
     @Test
     void shouldCorrectDeleteAuthorById() {
-        assertThatCode(() -> genreDao.getById(EXISTING_GENRE_ID))
+        assertThatCode(() -> genreDao.getById(EXISTING_GENRE_ID2))
                 .doesNotThrowAnyException();
-        genreDao.deleteById(EXISTING_GENRE_ID);
-        assertThatCode(() -> genreDao.getById(EXISTING_GENRE_ID))
+        genreDao.deleteById(EXISTING_GENRE_ID2);
+        assertThatCode(() -> genreDao.getById(EXISTING_GENRE_ID2))
                 .isInstanceOf(EmptyResultDataAccessException.class);
+
+        assertThatCode(() -> genreDao.deleteById(EXISTING_GENRE_ID1))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 }
