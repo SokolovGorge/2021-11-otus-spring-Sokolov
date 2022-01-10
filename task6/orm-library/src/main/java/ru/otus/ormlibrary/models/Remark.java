@@ -11,12 +11,15 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "remark")
-
 public class Remark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
 
     @Column(name = "text", nullable = false)
     private String text;
