@@ -60,8 +60,9 @@ class BookRepositoryJpaTest {
 
         val updatingBook = repositoryJpa.findById(EXISTING_BOOK_ID).get();
         updatingBook.setTitle("Test");
-        updatingBook.getRemarks().remove(0);
+        updatingBook.getRemarks().clear();
         expectedBook = repositoryJpa.save(updatingBook);
+        em.flush();
         actualBook = repositoryJpa.findById(EXISTING_BOOK_ID).get();
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }

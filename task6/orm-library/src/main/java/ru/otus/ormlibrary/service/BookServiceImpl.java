@@ -63,8 +63,8 @@ public class BookServiceImpl implements BookService {
         }
         Book book = optionalBook.get();
         book.setTitle(title);
-        book.getRemarks().clear();
- /*       val optionalAuthor = authorRepository.findById(authorId);
+
+        val optionalAuthor = authorRepository.findById(authorId);
         if (optionalAuthor.isEmpty()) {
             throw new ApplicationException("Не найден австор с Id = " + authorId);
         }
@@ -88,9 +88,8 @@ public class BookServiceImpl implements BookService {
                 remarkList.addAll(remarks.stream().filter(st -> !existsTexts.contains(st)).map(st -> new Remark(null, book, st)).collect(Collectors.toList()));
             }
             book.setRemarks(remarkList);
-        }*/
-        bookRepository.save(book);
-        return null;
+        }
+        return new BookDto(bookRepository.save(book));
     }
 
     @Transactional
