@@ -34,8 +34,7 @@ public class Book {
     private Genre genre;
 
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(targetEntity = Remark.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "book_id")
+    @OneToMany(mappedBy = "book", targetEntity = Remark.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Remark> remarks;
 
 }
