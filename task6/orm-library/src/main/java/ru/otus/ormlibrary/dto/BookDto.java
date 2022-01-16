@@ -16,13 +16,11 @@ public class BookDto {
     private String title;
     private AuthorDto author;
     private GenreDto genre;
-    private List<String> remarks;
 
     public BookDto(Book book) {
         id = book.getId();
         title = book.getTitle();
         author = book.getAuthor() == null ? null : new AuthorDto(book.getAuthor());
         genre = book.getGenre() == null ? null : new GenreDto(book.getGenre());
-        remarks = book.getRemarks() == null ? null : book.getRemarks().stream().map(Remark::getText).collect(Collectors.toList());
     }
 }

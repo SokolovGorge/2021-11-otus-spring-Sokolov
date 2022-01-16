@@ -11,9 +11,6 @@ import org.springframework.context.annotation.Import;
 import ru.otus.ormlibrary.models.Author;
 import ru.otus.ormlibrary.models.Book;
 import ru.otus.ormlibrary.models.Genre;
-import ru.otus.ormlibrary.models.Remark;
-
-import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,8 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookRepositoryJpaTest {
 
     private static final int EXPECTED_BOOK_COUNT = 2;
-    private static final int EXPECTED_REMARK_COUNT = 4;
-    private static final long EXPECTED_QUERIES_COUNT = 2;
+    private static final long EXPECTED_QUERIES_COUNT = 1;
     private static final long EXISTING_BOOK_ID = 1;
     private static final long EXISTING_GENRE_ID1 = 1;
     private static final long EXISTING_AUTHOR_ID1 = 1;
@@ -48,11 +44,7 @@ class BookRepositoryJpaTest {
 
         val existingAuthor = em.find(Author.class, EXISTING_AUTHOR_ID1);
         val existingGenre = em.find(Genre.class, EXISTING_GENRE_ID1);
-        val newBook = new Book(null, "Title", existingAuthor, existingGenre, null);
-        val newRemarks = new ArrayList<Remark>();
-        newRemarks.add(new Remark(null, newBook, "Remark1"));
-        newRemarks.add(new Remark(null, newBook, "Remark2"));
-        newBook.setRemarks(newRemarks);
+        val newBook = new Book(null, "Title", existingAuthor, existingGenre);
 
         var expectedBook = repositoryJpa.save(newBook);
         var actualBook = repositoryJpa.findById(expectedBook.getId()).get();
@@ -60,7 +52,6 @@ class BookRepositoryJpaTest {
 
         val updatingBook = repositoryJpa.findById(EXISTING_BOOK_ID).get();
         updatingBook.setTitle("Test");
-        updatingBook.getRemarks().clear();
         expectedBook = repositoryJpa.save(updatingBook);
         em.flush();
         actualBook = repositoryJpa.findById(EXISTING_BOOK_ID).get();
@@ -84,7 +75,6 @@ class BookRepositoryJpaTest {
         val expectedBook = em.find(Book.class, EXISTING_BOOK_ID);
         assertThat(optionalActualBook).isPresent().get()
                 .usingRecursiveComparison().isEqualTo(expectedBook);
-        assertThat(optionalActualBook.get().getRemarks()).isNotNull().hasSize(EXPECTED_REMARK_COUNT);
     }
 
     @DisplayName("Возвращать ожидаемый список книг")
@@ -96,7 +86,6 @@ class BookRepositoryJpaTest {
 
         val books = repositoryJpa.findAll();
         assertThat(books).isNotNull().hasSize(EXPECTED_BOOK_COUNT);
-        books.forEach(b -> assertThat(b.getRemarks()).isNotNull().hasSize(EXPECTED_REMARK_COUNT));
 
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
 

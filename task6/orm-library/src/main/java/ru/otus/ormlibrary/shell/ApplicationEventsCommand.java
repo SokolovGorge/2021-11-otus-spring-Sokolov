@@ -5,12 +5,11 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.ormlibrary.dto.BookDto;
+import ru.otus.ormlibrary.dto.RemarkDto;
 import ru.otus.ormlibrary.service.AuthorService;
 import ru.otus.ormlibrary.service.BookService;
 import ru.otus.ormlibrary.service.GenreService;
-
-import java.util.Arrays;
-import java.util.List;
+import ru.otus.ormlibrary.service.RemarkService;
 
 @ShellComponent
 public class ApplicationEventsCommand {
@@ -18,11 +17,13 @@ public class ApplicationEventsCommand {
     private final AuthorService authorService;
     private final GenreService genreService;
     private final BookService bookService;
+    private final RemarkService remarkService;
 
-    public ApplicationEventsCommand(AuthorService authorService, GenreService genreService, BookService bookService) {
+    public ApplicationEventsCommand(AuthorService authorService, GenreService genreService, BookService bookService, RemarkService remarkService) {
         this.authorService = authorService;
         this.genreService = genreService;
         this.bookService = bookService;
+        this.remarkService = remarkService;
     }
 
     @ShellMethod(value = "Вывести список авторов", key = {"publishAuthors", "pa"})
@@ -58,9 +59,8 @@ public class ApplicationEventsCommand {
     @ShellMethod(value = "Добавить книгу", key = {"addBook", "ab"})
     public String insertBook(@ShellOption(help = "Заголовок книги") String title,
                              @ShellOption(help = "Id автора") long authorId,
-                             @ShellOption(help = "Id жанра") long genreId,
-                             @ShellOption(help = "Список примечаний (разделитель |)", defaultValue = "") String remarks) {
-        BookDto book = bookService.addBook(title, authorId, genreId, makeRemark(remarks));
+                             @ShellOption(help = "Id жанра") long genreId) {
+        BookDto book = bookService.addBook(title, authorId, genreId);
         return "Добавлена книга: " + book;
     }
 
@@ -70,7 +70,7 @@ public class ApplicationEventsCommand {
                              @ShellOption(help = "Id автора") long authorId,
                              @ShellOption(help = "Id жанра") long genreId,
                              @ShellOption(help = "Список примечаний (разделитель |)", defaultValue = "") String remarks) {
-        BookDto book = bookService.updateBook(id, title, authorId, genreId, makeRemark(remarks));
+        BookDto book = bookService.updateBook(id, title, authorId, genreId);
          return "Изменена книга: " + book;
     }
 
@@ -85,11 +85,20 @@ public class ApplicationEventsCommand {
          return "Книга: " + bookService.getBook(id);
     }
 
-    private List<String> makeRemark(String remarks) {
-        if (null == remarks | remarks.isEmpty()) {
-            return null;
-        }
-        return Arrays.asList(remarks.split("\\|"));
+    @ShellMethod(value = "Вывести список примечаний книги", key = {"publishRemarks", "pr"})
+    public String publishRemarksByBook(@ShellOption(help = "Id книги") long bookId) {
+        val sb = new StringBuilder("Список примечаний книги:\n");
+        remarkService.getAllRemarksByBook(bookId).forEach(remark -> {
+            sb.append(remark);
+            sb.append("\n");
+        });
+        return sb.toString();
+    }
+
+    @ShellMethod(value = "Добавить примечание", key = {"addRemark", "ar"})
+    public String insertRemark(@ShellOption(help = "Id книги") long bookId, @ShellOption(help = "Примечание") String text) {
+        RemarkDto remarkDto = remarkService.addRemark(bookId, text);
+        return "Добавлено примечание: " + remarkDto;
     }
 
 }

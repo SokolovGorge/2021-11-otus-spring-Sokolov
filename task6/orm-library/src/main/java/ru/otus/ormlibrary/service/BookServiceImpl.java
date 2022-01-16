@@ -6,12 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.ormlibrary.dto.BookDto;
 import ru.otus.ormlibrary.exceptions.ApplicationException;
 import ru.otus.ormlibrary.models.Book;
-import ru.otus.ormlibrary.models.Remark;
 import ru.otus.ormlibrary.repositories.AuthorRepository;
 import ru.otus.ormlibrary.repositories.BookRepository;
 import ru.otus.ormlibrary.repositories.GenreRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,81 +34,39 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDto addBook(String title, long authorId, long genreId, List<String> remarks) {
-        val optionalAuthor = authorRepository.findById(authorId);
-        if (optionalAuthor.isEmpty()) {
-            throw new ApplicationException("Не найден австор с Id = " + authorId);
-        }
-        val optionalGenre = genreRepository.findById(genreId);
-        if (optionalGenre.isEmpty()) {
-            throw new ApplicationException("Не найден жанр с Id = " + genreId);
-        }
-        val book = new Book(null, title, optionalAuthor.get(), optionalGenre.get(), null);
-        if (remarks != null) {
-            val remarkList = new ArrayList<Remark>();
-            remarks.forEach(r -> remarkList.add(new Remark(null, book, r)));
-            book.setRemarks(remarkList);
-        }
+    public BookDto addBook(String title, long authorId, long genreId) {
+        val author = authorRepository.findById(authorId).orElseThrow(() -> new ApplicationException("Не найден австор с Id = " + authorId));
+        val genre = genreRepository.findById(genreId).orElseThrow(() -> new ApplicationException("Не найден жанр с Id = " + genreId));
+        val book = new Book(null, title, author, genre);
         return new BookDto(bookRepository.save(book));
     }
 
     @Transactional
     @Override
-    public BookDto updateBook(long id, String title, long authorId, long genreId, List<String> remarks) {
-        val optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty()) {
-            throw new ApplicationException("Не найдена книга Id = " + id);
-        }
-        Book book = optionalBook.get();
+    public BookDto updateBook(long id, String title, long authorId, long genreId) {
+        val book = bookRepository.findById(id).orElseThrow(() -> new ApplicationException("Не найдена книга Id = " + id));
         book.setTitle(title);
 
-        val optionalAuthor = authorRepository.findById(authorId);
-        if (optionalAuthor.isEmpty()) {
-            throw new ApplicationException("Не найден австор с Id = " + authorId);
-        }
-        book.setAuthor(optionalAuthor.get());
-        val optionalGenre = genreRepository.findById(genreId);
-        if (optionalGenre.isEmpty()) {
-            throw new ApplicationException("Не найден жанр с Id = " + genreId);
-        }
-        book.setGenre(optionalGenre.get());
-
-
-        if (null == remarks || remarks.isEmpty()) {
-            book.getRemarks().clear();
-        } else {
-            val remarkList = new ArrayList<Remark>();
-            if (null == book.getRemarks() || book.getRemarks().isEmpty()) {
-                remarkList.addAll(remarks.stream().map(st -> new Remark(null, book, st)).collect(Collectors.toList()));
-            } else {
-                remarkList.addAll(book.getRemarks().stream().filter(r -> remarks.contains(r.getText())).collect(Collectors.toList()));
-                val existsTexts = book.getRemarks().stream().map(Remark::getText).collect(Collectors.toList());
-                remarkList.addAll(remarks.stream().filter(st -> !existsTexts.contains(st)).map(st -> new Remark(null, book, st)).collect(Collectors.toList()));
-            }
-            book.setRemarks(remarkList);
-        }
+        val author = authorRepository.findById(authorId).orElseThrow(() -> new ApplicationException("Не найден австор с Id = " + authorId));
+        book.setAuthor(author);
+        val genre = genreRepository.findById(genreId).orElseThrow(() -> new ApplicationException("Не найден жанр с Id = " + genreId));
+        book.setGenre(genre);
         return new BookDto(bookRepository.save(book));
     }
 
     @Transactional
     @Override
     public BookDto deleteBook(long id) {
-        val optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty()) {
-            throw new ApplicationException("Не найдена книга с Id = " + id);
-        }
+        val book = bookRepository.findById(id).orElseThrow(() -> new ApplicationException("Не найдена книга с Id = " + id));
         bookRepository.deleteById(id);
-        return new BookDto(optionalBook.get());
+        return new BookDto(book);
     }
 
     @Transactional(readOnly = true)
     @Override
     public BookDto getBook(long id) {
-        val optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty()) {
-            throw new ApplicationException("Не найдена книга с Id = " + id);
-        }
-        return new BookDto(optionalBook.get());
+        val book = bookRepository.findById(id).orElseThrow(() -> new ApplicationException("Не найдена книга с Id = " + id));
+        return new BookDto(book);
     }
 
 }
