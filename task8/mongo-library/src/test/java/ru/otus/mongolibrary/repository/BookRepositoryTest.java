@@ -1,17 +1,19 @@
 package ru.otus.mongolibrary.repository;
 
 import lombok.val;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DisplayName("Репозиторий на основе Data MongoDB для работы с книгами должен")
 @DataMongoTest
 @ComponentScan({ "ru.otus.example.mongolibrary.repository"})
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BookRepositoryTest {
 
     private static final int EXPECTED_BOOK_COUNT = 5;
@@ -27,7 +29,6 @@ class BookRepositoryTest {
 
     @DisplayName("Возвращать ожидаемый список книг")
     @Test
-    @Order(1)
     void shouldReturnExpectedBookList() {
         val books = bookRepository.findAll();
         assertThat(books).isNotNull().hasSize(EXPECTED_BOOK_COUNT);
@@ -35,7 +36,6 @@ class BookRepositoryTest {
 
     @DisplayName("Возвращать книги по заголовку")
     @Test
-    @Order(2)
     void shouldReturnBookByTitle() {
         val books = bookRepository.findByTitle(EXISTING_TITLE);
         assertThat(books).isNotNull().isNotEmpty();
@@ -43,7 +43,6 @@ class BookRepositoryTest {
 
     @DisplayName("Возвращать книги по фамилии автора")
     @Test
-    @Order(3)
     void shouldReturnBookByAuthorSurName() {
         val books = bookRepository.findByAuthorSurName(EXISTING_AUTHOR_SURNAME);
         assertThat(books).isNotNull().isNotEmpty();
@@ -51,7 +50,6 @@ class BookRepositoryTest {
 
     @DisplayName("Возвращать книги по названию жанра")
     @Test
-    @Order(4)
     void shouldReturnBookByGenreName() {
         val books = bookRepository.findByGenreName(EXISTING_GENRE_NAME);
         assertThat(books).isNotNull().isNotEmpty();
@@ -59,7 +57,6 @@ class BookRepositoryTest {
 
     @DisplayName("Рекурсивно изменять книгу")
     @Test
-    @Order(5)
     void shouldUpdateBookWithRecursive() {
         val newTitle = "Title";
         val existingBook = bookRepository.findAll().get(0);
@@ -73,7 +70,6 @@ class BookRepositoryTest {
 
     @DisplayName("Удалять книгу вместе с комментариями")
     @Test
-    @Order(6)
     void shouldDeleteBookWithRecursive() {
         val existingBook = bookRepository.findAll().get(1);
         var remarks = remarkRepository.findAllRemarksByBook(existingBook);

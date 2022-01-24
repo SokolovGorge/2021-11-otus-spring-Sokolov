@@ -6,22 +6,19 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import ru.otus.mongolibrary.domain.Book;
+import ru.otus.mongolibrary.domain.Remark;
 
 @RequiredArgsConstructor
 public class BookRepositoryCustomImpl implements  BookRepositoryCustom {
 
     private final MongoTemplate mongoTemplate;
-    private final RemarkRepository remarkRepository;
 
     @Override
     public void deleteByIdWithRecursive(String id) {
-        val query = Query.query(Criteria.where("id").is(new ObjectId(id)));
-        val book = mongoTemplate.findOne(query, Book.class);
-        if (book != null) {
-            remarkRepository.findAllRemarksByBook(book).forEach(remarkRepository::delete);
-            mongoTemplate.remove(book);
-        }
+        val query = Query.query(Criteria.where("book.id").is(new ObjectId(id)));
+        mongoTemplate.remove(query, Remark.class);
     }
 
     @Override
@@ -29,10 +26,9 @@ public class BookRepositoryCustomImpl implements  BookRepositoryCustom {
         String oldId = book.getId();
         Book savedBook = mongoTemplate.save(book);
         if (oldId != null) {
-            remarkRepository.findAllRemarksByBook(savedBook).forEach(remark -> {
-                remark.setBook(savedBook);
-                remarkRepository.save(remark);
-            });
+            val query = Query.query(Criteria.where("book.id").is(new ObjectId(oldId)));
+            val update = new Update().set("book", savedBook);
+            mongoTemplate.updateMulti(query, update, Remark.class);
         }
         return savedBook;
     }
