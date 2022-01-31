@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Жанры</title>
+  <style>
+    body {
+      padding: 50px;
+    }
+
+    .row {
+      margin-top: 10px;
+    }
+
+    .genre {
+      border: 1px solid steelblue;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .genre tr td, th {
+      padding: 5px;
+      border: 1px solid steelblue;
+    }
+
+    .colname {
+      width: 100%;
+    }
+
+  </style>
+
+</head>
+<body>
+<h3>Жанры:</h3>
+
+<table class="genre">
+  <thead>
+  <tr>
+    <th class="colname">Наименование</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="genre : ${genres}">
+    <td class="colname" th:text="${genre.name}">Детектив</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
+
+
