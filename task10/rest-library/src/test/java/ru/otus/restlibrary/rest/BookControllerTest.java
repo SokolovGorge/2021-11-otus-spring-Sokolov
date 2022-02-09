@@ -18,8 +18,7 @@ import ru.otus.restlibrary.service.BookService;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,7 +63,7 @@ class BookControllerTest {
         List<BookDto> expectedResult = List.of(new BookDto(existingBOOK1), new BookDto(existingBOOK2));
         given(bookService.getAllBooks()).willReturn(expectedResult);
 
-        mvc.perform(get("/api/getbooks"))
+        mvc.perform(get("/api/books"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
@@ -75,7 +74,7 @@ class BookControllerTest {
         BookDto expectedResult = new BookDto(existingBOOK1);
         given(bookService.getBook(EXISTING_BOOK_ID1)).willReturn(expectedResult);
 
-        mvc.perform(get("/api/getbook").param("id", String.valueOf(EXISTING_BOOK_ID1)))
+        mvc.perform(get("/api/books/" + String.valueOf(EXISTING_BOOK_ID1)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
@@ -90,7 +89,7 @@ class BookControllerTest {
         map.add("title", EXISTING_BOOK_TITLE1);
         map.add("authorId", String.valueOf(EXISTING_AUTHOR_ID1));
         map.add("genreId", String.valueOf(EXISTING_GENRE_ID1));
-        mvc.perform(post("/api/savebook").params(map))
+        mvc.perform(put("/api/books").params(map))
                 .andExpect(status().isOk());
     }
 
@@ -98,7 +97,7 @@ class BookControllerTest {
     @Test
     public void shouldDeleteBook() throws Exception {
         given(bookService.deleteBook(EXISTING_BOOK_ID1)).willReturn(new BookDto(existingBOOK1));
-        mvc.perform(post("/api/deletebook").param("id", String.valueOf(EXISTING_BOOK_ID1)))
+        mvc.perform(delete("/api/books/" + String.valueOf(EXISTING_BOOK_ID1)))
                 .andExpect(status().isOk());
     }
 

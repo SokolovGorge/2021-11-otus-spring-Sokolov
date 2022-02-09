@@ -14,7 +14,7 @@ public class GenreController {
 
     private final GenreService genreService;
 
-    @GetMapping("/api/getgenres")
+    @GetMapping("/api/genres")
     public List<GenreDto> getAllGenres() {
         return genreService.getAllGenres();
     }
