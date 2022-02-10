@@ -1,7 +1,6 @@
 package ru.otus.restlibrary.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.restlibrary.dto.BookDto;
@@ -25,19 +24,26 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBook(id));
     }
 
+    @PostMapping("/api/books")
+    public ResponseEntity<Long> newBook(@RequestParam("title") String title,
+                                     @RequestParam("authorId") long authorId,
+                                     @RequestParam("genreId") long genreId) {
+        return ResponseEntity.ok(bookService.addBook(title, authorId, genreId).getId());
+    }
+
     @PutMapping("/api/books")
     public ResponseEntity<?> saveBook(@RequestParam("id") long id,
                          @RequestParam("title") String title,
                          @RequestParam("authorId") long authorId,
                          @RequestParam("genreId") long genreId) {
         bookService.updateBook(id, title, authorId, genreId);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/api/books/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable("id") long id) {
         bookService.deleteBook(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }

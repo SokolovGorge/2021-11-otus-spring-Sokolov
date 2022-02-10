@@ -47,6 +47,9 @@ class BookControllerTest {
     private static final Book existingBOOK1 = new Book(EXISTING_BOOK_ID1, EXISTING_BOOK_TITLE1, existingAUTHOR1, existingGENRE1);
     private static final Book existingBOOK2 = new Book(EXISTING_BOOK_ID2, EXISTING_BOOK_TITLE2, existingAUTHOR2, existingGENRE1);
 
+    private static final long NEW_BOOK_ID = 99;
+    private static final String NEW_BOOK_TITLE = "Title";
+
 
     @Autowired
     private MockMvc mvc;
@@ -78,6 +81,21 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
+    @DisplayName("Создавать книгу")
+    @Test
+    public void shouldNewBook() throws Exception {
+        given(bookService.addBook(NEW_BOOK_TITLE, EXISTING_AUTHOR_ID2, EXISTING_GENRE_ID1))
+                .willReturn(new BookDto(new Book(NEW_BOOK_ID, NEW_BOOK_TITLE, existingAUTHOR2, existingGENRE1)));
+        MultiValueMap map = new LinkedMultiValueMap();
+        map.add("title", NEW_BOOK_TITLE);
+        map.add("authorId", String.valueOf(EXISTING_AUTHOR_ID2));
+        map.add("genreId", String.valueOf(EXISTING_GENRE_ID1));
+        mvc.perform(post("/api/books").params(map))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(NEW_BOOK_ID)));
+    }
+
+
 
     @DisplayName("Сохранять книгу")
     @Test

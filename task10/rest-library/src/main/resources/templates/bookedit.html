@@ -50,7 +50,7 @@
                 var opt = document.createElement('option');
                 opt.value = author.id;
                 opt.text = author.firstName + ` ` +  author.surName;
-                opt.selected = editbook.author.id == author.id;
+                opt.selected = editbook.author != null && editbook.author.id == author.id;
                 authorSelector.appendChild(opt);
             })
         })
@@ -63,7 +63,7 @@
                 var opt = document.createElement('option');
                 opt.value = genre.id;
                 opt.text = genre.name;
-                opt.selected = editbook.genre.id == genre.id;
+                opt.selected = editbook.genre != null && editbook.genre.id == genre.id;
                 genreSelector.appendChild(opt);
             })
         })
@@ -71,17 +71,30 @@
 
 
     function loadBook() {
-        var myParam = location.search.split('id=')[1]
-        $.get('/api/books/' + myParam).done(function (book) {
-            editbook = book;
-            document.getElementById('id-input').value = book.id;
-            document.getElementById('book-title').value = book.title;
+        const myParam = location.search.split('id=')[1];
+        if (myParam == undefined) {
+            document.getElementById("page-title").innerText = "Новая книга:";
+            editbook = {
+                id: null,
+                title: null,
+                author: null,
+                genre: null
+            };
             loadAuthors();
             loadGenres();
-        })
+        } else {
+            document.getElementById("page-title").innerText = 'Редактирование книги:';
+            $.get('/api/books/' + myParam).done(function (book) {
+                editbook = book;
+                document.getElementById('id-input').value = book.id;
+                document.getElementById('book-title').value = book.title;
+                loadAuthors();
+                loadGenres();
+            })
+        }
     }
 
-    function saveBook() {
+    function editBook() {
         $.ajax({
             url: '/api/books?id=' + document.getElementById('id-input').value +
                 '&title=' + document.getElementById('book-title').value +
@@ -92,6 +105,26 @@
                 window.location.href = '/';
             }
         });
+    }
+
+    function newBook() {
+        $.ajax({
+            url: '/api/books?title=' + document.getElementById('book-title').value +
+                '&authorId=' + document.getElementById("book-author").value +
+                '&genreId=' + document.getElementById("book-genre").value,
+            type: 'POST',
+            success: function(result) {
+                window.location.href = '/';
+            }
+        });
+    }
+
+    function saveBook() {
+        if (editbook.id == null) {
+            newBook();
+        } else {
+            editBook();
+        }
     }
 
     function cancelEdit() {
@@ -106,7 +139,7 @@
 <body>
 
 <form id="edit-form" action="bookedit.html">
-    <h3>Книга:</h3>
+    <h3 id="page-title">Книга:</h3>
 
     <div class="row">
         <label for="id-input">ID:</label>

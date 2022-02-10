@@ -53,6 +53,10 @@
              });
         };
 
+        function newBook() {
+            window.location.href = '/bookedit';
+        }
+
         function editBook(id) {
             window.location.href = '/bookedit?id=' + id
         }
@@ -96,6 +100,9 @@
     <tbody id="maintbody">
     </tbody>
 </table>
+<div class="row">
+    <button onclick="newBook()">Новая</button>
+</div>
 
 </body>
 </html>
