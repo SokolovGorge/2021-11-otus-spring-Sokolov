@@ -25,25 +25,23 @@ public class BookController {
     }
 
     @PostMapping("/api/books")
-    public ResponseEntity<Long> newBook(@RequestParam("title") String title,
+    public ResponseEntity<BookDto> newBook(@RequestParam("title") String title,
                                      @RequestParam("authorId") long authorId,
                                      @RequestParam("genreId") long genreId) {
-        return ResponseEntity.ok(bookService.addBook(title, authorId, genreId).getId());
+        return ResponseEntity.ok(bookService.addBook(title, authorId, genreId));
     }
 
     @PutMapping("/api/books")
-    public ResponseEntity<?> saveBook(@RequestParam("id") long id,
+    public ResponseEntity<BookDto> saveBook(@RequestParam("id") long id,
                          @RequestParam("title") String title,
                          @RequestParam("authorId") long authorId,
                          @RequestParam("genreId") long genreId) {
-        bookService.updateBook(id, title, authorId, genreId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bookService.updateBook(id, title, authorId, genreId));
     }
 
     @DeleteMapping("/api/books/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable("id") long id) {
-        bookService.deleteBook(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<BookDto> deleteBook(@PathVariable("id") long id) {
+        return ResponseEntity.ok(bookService.deleteBook(id));
     }
 
 }
