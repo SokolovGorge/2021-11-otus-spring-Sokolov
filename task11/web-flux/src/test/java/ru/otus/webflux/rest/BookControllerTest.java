@@ -1,6 +1,5 @@
 package ru.otus.webflux.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import ru.otus.webflux.repository.AuthorRepository;
 import ru.otus.webflux.repository.BookRepository;
 import ru.otus.webflux.repository.GenreRepository;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -46,7 +44,6 @@ class BookControllerTest {
     private static final Book existingBOOK1 = new Book(EXISTING_BOOK_ID1, EXISTING_BOOK_TITLE1, existingAUTHOR1, existingGENRE1);
     private static final Book existingBOOK2 = new Book(EXISTING_BOOK_ID2, EXISTING_BOOK_TITLE2, existingAUTHOR2, existingGENRE1);
 
-    private static final String NEW_BOOK_ID = "99";
     private static final String NEW_BOOK_TITLE = "Title";
 
 
@@ -62,12 +59,9 @@ class BookControllerTest {
     @Autowired
     private WebTestClient webClient;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @DisplayName("Возвращать список книг")
     @Test
-    public void shouldReturnListBooks() throws Exception {
+    public void shouldReturnListBooks() {
         val books = List.of(existingBOOK1, existingBOOK2);
         val bookFlux = Flux.fromIterable(books);
         Mockito.when(bookRepository.findAll()).thenReturn(bookFlux);
@@ -80,7 +74,7 @@ class BookControllerTest {
 
     @DisplayName("Возвращять книгу по id")
     @Test
-    public void shouldReturnBook() throws Exception {
+    public void shouldReturnBook() {
         Mockito.when(bookRepository.findById(EXISTING_BOOK_ID1))
                 .thenReturn(Mono.just(existingBOOK1));
 
@@ -94,7 +88,7 @@ class BookControllerTest {
 
     @DisplayName("Создавать книгу")
     @Test
-    public void shouldNewBook() throws Exception {
+    public void shouldNewBook() {
         val newBook = new Book(null, NEW_BOOK_TITLE, existingAUTHOR1, existingGENRE1);
         val expectedBook = new Book(EXISTING_BOOK_ID1, NEW_BOOK_TITLE, existingAUTHOR1, existingGENRE1);
 
@@ -114,7 +108,7 @@ class BookControllerTest {
 
     @DisplayName("Сохранять книгу")
     @Test
-    public void shouldSaveBook() throws Exception {
+    public void shouldSaveBook() {
         val newBook = new Book(EXISTING_BOOK_ID1, NEW_BOOK_TITLE, existingAUTHOR2, existingGENRE1);
         Mockito.when(authorRepository.findById(EXISTING_AUTHOR_ID2))
                 .thenReturn(Mono.just(existingAUTHOR2));
@@ -132,7 +126,7 @@ class BookControllerTest {
 
     @DisplayName("Удалять книгу")
     @Test
-    public void shouldDeleteBook() throws Exception {
+    public void shouldDeleteBook() {
         webClient.delete().uri("/api/books/{id}", EXISTING_BOOK_ID1)
                 .exchange()
                 .expectStatus().isOk();

@@ -1,11 +1,9 @@
 package ru.otus.webflux.rest;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.otus.webflux.domain.Author;
 import ru.otus.webflux.domain.Book;
 import ru.otus.webflux.dto.BookDto;
 import ru.otus.webflux.repository.AuthorRepository;
@@ -34,10 +32,9 @@ public class BookController {
     public Mono<BookDto> newBook(@RequestParam("title") String title,
                                  @RequestParam("authorId") String authorId,
                                  @RequestParam("genreId") String genreId) {
-        return authorRepository.findById(authorId)
-                .flatMap(author -> genreRepository.findById(genreId)
-                        .flatMap(genre -> bookRepository.save(new Book(title, author, genre))
-                                .map(BookDto::new)));
+        return Mono.zip(authorRepository.findById(authorId), genreRepository.findById(genreId))
+                .flatMap(tuple -> bookRepository.save(new Book(title, tuple.getT1(), tuple.getT2())))
+                .map(BookDto::new);
     }
 
     @PutMapping("/api/books")
@@ -45,10 +42,9 @@ public class BookController {
                                   @RequestParam("title") String title,
                                   @RequestParam("authorId") String authorId,
                                   @RequestParam("genreId") String genreId) {
-        return  authorRepository.findById(authorId)
-                .flatMap(author -> genreRepository.findById(genreId).
-                        flatMap(genre -> bookRepository.save(new Book(id, title, author, genre))
-                                .map(BookDto::new)));
+        return Mono.zip(authorRepository.findById(authorId), genreRepository.findById(genreId))
+                .flatMap(tuple -> bookRepository.save(new Book(id, title, tuple.getT1(), tuple.getT2())))
+                .map(BookDto::new);
     }
 
     @DeleteMapping("/api/books/{id}")
