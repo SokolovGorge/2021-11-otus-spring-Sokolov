@@ -1,6 +1,6 @@
 insert into suser(login, passwrd) values ('admin', 'pass');
 insert into suser(login, passwrd) values ('user', 'password');
-
+--
 insert into genre(`name`) values ('Детектив');
 insert into genre(`name`) values ('Фантастика');
 insert into genre(`name`) values ('Приключения');

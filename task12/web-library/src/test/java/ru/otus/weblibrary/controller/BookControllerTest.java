@@ -65,12 +65,11 @@ class BookControllerTest {
     @MockBean
     private UserDetailsService userDetailsService;
 
+    @DisplayName("Возвращять список книг")
     @WithMockUser(
             username = "admin",
             authorities = {"ROLE_ADMIN"}
     )
-
-    @DisplayName("Возвращять список книг")
     @Test
     public void shouldReturnListBooks() throws Exception {
         given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
@@ -81,9 +80,34 @@ class BookControllerTest {
                .andExpect(content().string(new StringContains(EXISTING_BOOK_TITLE1)));
     }
 
+    @DisplayName("Перевод на страницу логина со страницы списка книг")
+    @Test
+    public void shouldNotReturnListBooks() throws Exception {
+        given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
+        val books = Arrays.asList(new BookDto(existingBOOK1), new BookDto(existingBOOK2));
+        given(bookService.getAllBooks()).willReturn(books);
+        mvc.perform(get("/booklist"))
+                .andExpect(status().is3xxRedirection());
+    }
+
+
     @DisplayName("Редактировать книгу")
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
     @Test
     public void shouldReturnEditBooks() throws Exception {
+        given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
+        given(bookService.getBook(EXISTING_BOOK_ID1)).willReturn(new BookDto(existingBOOK1));
+        mvc.perform(get("/bookedit?id=" + EXISTING_BOOK_ID1))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new StringContains(EXISTING_BOOK_TITLE1)));
+    }
+
+    @DisplayName("Перевод на страницу логина со страницы редактировать книгу")
+    @Test
+    public void shouldNotReturnEditBooks() throws Exception {
         given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
         given(bookService.getBook(EXISTING_BOOK_ID1)).willReturn(new BookDto(existingBOOK1));
         mvc.perform(get("/bookedit?id=" + EXISTING_BOOK_ID1))
@@ -91,16 +115,43 @@ class BookControllerTest {
     }
 
     @DisplayName("Создать книгу")
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
     @Test
     public void shouldReturnNewBooks() throws Exception {
+        given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
+        mvc.perform(get("/booknew"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new StringContains("<title>Новая книга</title>")));
+    }
+
+    @DisplayName("Перевод на страницу логина со страницы создать книгу")
+    @Test
+    public void shouldNotReturnNewBooks() throws Exception {
         given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
         mvc.perform(get("/booknew"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @DisplayName("Удалить книгу")
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
     @Test
     public void shouldReturnDeleteBooks() throws Exception {
+        given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
+        given(bookService.getBook(EXISTING_BOOK_ID1)).willReturn(new BookDto(existingBOOK1));
+        mvc.perform(get("/bookdelete?id=" + EXISTING_BOOK_ID1))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new StringContains(EXISTING_BOOK_TITLE1)));
+    }
+
+    @DisplayName("Перевод на страницу логина со страницы удалить книгу")
+    @Test
+    public void shouldNotReturnDeleteBooks() throws Exception {
         given(userDetailsService.loadUserByUsername("admin")).willReturn(User.withUsername("admin").password("pass").authorities("ROLE_ADMIN").build());
         given(bookService.getBook(EXISTING_BOOK_ID1)).willReturn(new BookDto(existingBOOK1));
         mvc.perform(get("/bookdelete?id=" + EXISTING_BOOK_ID1))

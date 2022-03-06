@@ -4,9 +4,8 @@ import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.otus.weblibrary.domain.Author;
 import ru.otus.weblibrary.domain.Book;
 import ru.otus.weblibrary.domain.Genre;
@@ -20,11 +19,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @DisplayName("Тестирование сервиса книг")
-@WebMvcTest(BookServiceImpl.class)
+@SpringBootTest
 class BookServiceImplTest {
     private static final long EXISTING_BOOK_ID1 = 1;
     private static final String EXISTING_BOOK_TITLE1 = "Восточный экспресс";
@@ -58,9 +57,6 @@ class BookServiceImplTest {
 
     @MockBean
     private BookRepository bookRepository;
-
-    @MockBean
-    private UserDetailsService userDetailsService;
 
     @Autowired
     private BookService bookService;
