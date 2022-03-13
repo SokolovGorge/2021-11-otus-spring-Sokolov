@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Отзывы</title>
+  <style>
+    body {
+      padding: 50px;
+    }
+
+    .author {
+      border: 1px solid steelblue;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .author tr td, th {
+      padding: 5px;
+      border: 1px solid steelblue;
+    }
+
+    .colsurname {
+      width: 50%;
+    }
+
+    .colfirstname {
+      width: 50%;
+    }
+
+  </style>
+
+</head>
+<body>
+<h3>Авторы:</h3>
+
+<table class="author">
+  <thead>
+  <tr>
+    <th class="colsurname">Фамилия</th>
+    <th class="colfirstname">Имя</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="author : ${authors}">
+    <td class="colsurname" th:text="${author.surName}">Кристи</td>
+    <td class="colfirstname" th:text="${author.firstName}">Агата</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
+
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог книг</title>
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .colname {
+            width: 30%;
+        }
+
+        .colauthor {
+            width: 30%;
+        }
+
+        .colgenre {
+            width: 30%;
+        }
+
+        .colaction {
+            width: 10%;
+        }
+
+    </style>
+
+</head>
+<body>
+<h3>Каталог книг:</h3>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th class="colname">Наименование</th>
+        <th class="colauthor">Автор</th>
+        <th class="colgenre">Жанр</th>
+        <th class="colaction">Операции</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td class="colname" th:text="${book.title}">Восточный экспресс</td>
+        <td class="colauthor" th:text="${book.author.firstName} + ' ' + ${book.author.surName}">Агата Кристи</td>
+        <td class="colgenre" th:text="${book.genre.name}">Детектив</td>
+        <td class="colaction">
+            <a href="bookedit.html" th:href="@{/bookedit(id=${book.id})}">Редактирование</a>
+            <br>
+            <a href="booklist.html" th:href="@{/bookdelete(id=${book.id})}">Удаление</a>
+            <br>
+            <a href="remarklist.html" th:href="@{/remarklist(bookId=${book.id})}">Отзывы</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div class="row">
+    <form method="get" action="bookedit.html" th:action="@{/booknew}">
+        <button type="submit">Новая</button>
+    </form>
+</div>
+</body>
+</html>
