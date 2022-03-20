@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Отзывы</title>
+  <style>
+    body {
+      padding: 50px;
+    }
+
+    .row {
+      margin-top: 10px;
+    }
+
+    .remark {
+      border: 1px solid steelblue;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .remark tr td, th {
+      padding: 5px;
+      border: 1px solid steelblue;
+    }
+
+    .colname {
+      width: 100%;
+    }
+
+  </style>
+
+</head>
+<body>
+<h3>Отзывы:</h3>
+
+<table class="remark">
+  <thead>
+  <tr>
+    <th class="colname">Текст</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="remark : ${remarks}">
+    <td class="colname" th:text="${remark.text}">Отзыв</td>
+  </tr>
+  </tbody>
+</table>
+<div class="row">
+  <a href="remarknew.html" th:href="@{/remarknew(bookId=${bookId})}">
+    <button type="button">Новый</button>
+  </a>
+  <a href="booklist.html" th:href="@{/booklist}">
+    <button type="button">Отмена</button>
+  </a>
+
+</div>
+
+</body>
+</html>
+

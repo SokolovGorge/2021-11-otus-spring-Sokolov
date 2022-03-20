@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Библиотека</title>
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+
+</head>
+<body>
+<h3>Библиотека</h3>
+
+<div class="row">
+    <a href="authorlist.html" th:href="@{/authorlist}">Авторы</a>
+</div>
+<div class="row">
+    <a href="genrelist.html" th:href="@{/genrelist}">Жанры</a>
+</div>
+<div class="row">
+    <a href="booklist.html" th:href="@{/booklist}">Книги</a>
+</div>
+
+
+</body>
+</html>

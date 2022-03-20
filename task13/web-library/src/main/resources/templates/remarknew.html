@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новый комментарий</title>
+  <style>
+    body {
+      padding: 50px;
+    }
+
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    select {
+      width: 200px;
+    }
+
+    input:read-only {
+      background: lightgray;
+    }
+
+    .row {
+      margin-top: 10px;
+    }
+
+    .errors {
+      color: red;
+    }
+  </style>
+
+</head>
+<body>
+<form id="edit-form" action="remarknew.html" th:method="post" th:action="@{/remarknew(bookId=${remark.bookId})}"
+      th:object="${remark}">
+  <h3>Отзыв:</h3>
+
+  <div class="row" hidden>
+    <label for="id-input">BookId:</label>
+    <input id="id-input" name="bookId" type="text" readonly="readonly" value="1" th:value="*{bookId}"/>
+  </div>
+  <div class="row">
+    <label for="remark-text">Текст:</label>
+    <input id="remark-text" name="text" type="text" value="Отзыв" th:value="*{text}"/>
+    <div class="errors" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Отзыв должен быть заполнен
+    </div>
+  </div>
+  <div class="row">
+    <button type="submit">Сохранить</button>
+    <a href="remarklist.html" th:href="@{/remarklist(bookId=${remark.bookId})}">
+      <button type="button">Отмена</button>
+    </a>
+  </div>
+
+</form>
+</body>
+</html>
