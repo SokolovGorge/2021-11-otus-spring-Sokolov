@@ -20,15 +20,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-
+/*
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers( "/" );
+      //  web.ignoring().antMatchers( "/" );
     }
-
+*/
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+                .authorizeRequests().antMatchers("/").hasAnyRole("ADMIN", "USER")
+                .and()
                 .authorizeRequests().antMatchers("/book*").hasAnyRole("ADMIN", "USER")
                 .and()
                 .authorizeRequests().antMatchers("/authorlist").hasRole("ADMIN")

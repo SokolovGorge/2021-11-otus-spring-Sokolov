@@ -34,7 +34,8 @@ public class BookServiceImpl implements BookService {
         val author = authorRepository.findById(authorId).orElseThrow(() -> new ApplicationException("Не найден австор с Id = " + authorId));
         val genre = genreRepository.findById(genreId).orElseThrow(() -> new ApplicationException("Не найден жанр с Id = " + genreId));
         val book = new Book(null, title, author, genre);
-        return  new BookDto(bookRepository.save(book));
+        val newBook = bookRepository.save(book);
+        return  new BookDto(newBook);
     }
 
     @Transactional

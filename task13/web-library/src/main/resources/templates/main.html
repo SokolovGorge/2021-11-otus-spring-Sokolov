@@ -17,10 +17,10 @@
 <body>
 <h3>Библиотека</h3>
 
-<div class="row">
+<div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
     <a href="authorlist.html" th:href="@{/authorlist}">Авторы</a>
 </div>
-<div class="row">
+<div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
     <a href="genrelist.html" th:href="@{/genrelist}">Жанры</a>
 </div>
 <div class="row">
