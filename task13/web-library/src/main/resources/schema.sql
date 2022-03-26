@@ -85,10 +85,10 @@ CREATE TABLE IF NOT EXISTS acl_object_identity (
     );
 
 ALTER TABLE acl_entry
-    ADD FOREIGN KEY (acl_object_identity) REFERENCES acl_object_identity(id);
+    ADD FOREIGN KEY (acl_object_identity) REFERENCES acl_object_identity(id) ON DELETE CASCADE;
 
 ALTER TABLE acl_entry
-    ADD FOREIGN KEY (sid) REFERENCES acl_sid(id);
+    ADD FOREIGN KEY (sid) REFERENCES acl_sid(id) ON DELETE CASCADE;
 
 --
 -- Constraints for table acl_object_identity

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.weblibrary.consts.GrantStrategy;
+import ru.otus.weblibrary.consts.ObjectIdentityType;
 import ru.otus.weblibrary.domain.Book;
 import ru.otus.weblibrary.dto.BookDto;
 import ru.otus.weblibrary.exceptions.ApplicationException;
@@ -21,6 +23,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
+    private final AclService aclService;
 
     @Transactional(readOnly = true)
     @Override
@@ -35,6 +38,7 @@ public class BookServiceImpl implements BookService {
         val genre = genreRepository.findById(genreId).orElseThrow(() -> new ApplicationException("Не найден жанр с Id = " + genreId));
         val book = new Book(null, title, author, genre);
         val newBook = bookRepository.save(book);
+        aclService.addGrantsOnObjectIdentity(ObjectIdentityType.BOOK, newBook.getId(), GrantStrategy.CURRENT_SID);
         return  new BookDto(newBook);
     }
 
@@ -55,6 +59,7 @@ public class BookServiceImpl implements BookService {
     public BookDto deleteBook(long id) {
         val book = bookRepository.findById(id).orElseThrow(() -> new ApplicationException("Не найдена книга с Id = " + id));
         bookRepository.deleteById(id);
+        aclService.removeObjectIdentity(ObjectIdentityType.BOOK, id);
         return new BookDto(book);
     }
 

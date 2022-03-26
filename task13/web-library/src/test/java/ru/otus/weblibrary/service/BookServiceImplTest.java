@@ -58,6 +58,9 @@ class BookServiceImplTest {
     @MockBean
     private BookRepository bookRepository;
 
+    @MockBean
+    private AclService aclService;
+
     @Autowired
     private BookService bookService;
 
