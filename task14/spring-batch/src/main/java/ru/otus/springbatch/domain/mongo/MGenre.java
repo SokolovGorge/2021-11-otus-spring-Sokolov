@@ -16,8 +16,4 @@ public class MGenre {
     private String id;
     private String name;
 
-    public MGenre(String name) {
-        this.name = name;
-    }
-
 }

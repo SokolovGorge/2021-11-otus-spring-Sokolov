@@ -18,10 +18,4 @@ public class MBook {
     private MAuthor author;
     private MGenre genre;
 
-    public MBook(String title, MAuthor author, MGenre genre) {
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-    }
-
 }

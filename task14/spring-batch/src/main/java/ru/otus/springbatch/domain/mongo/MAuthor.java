@@ -17,9 +17,4 @@ public class MAuthor {
     private String firstName;
     private String surName;
 
-    public MAuthor(String firstName, String surName) {
-        this.firstName = firstName;
-        this.surName = surName;
-    }
-
 }

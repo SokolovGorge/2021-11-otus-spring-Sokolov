@@ -17,9 +17,4 @@ public class MRemark {
     private MBook book;
     private String text;
 
-    public MRemark(MBook book, String text) {
-        this.book = book;
-        this.text = text;
-    }
-
 }
