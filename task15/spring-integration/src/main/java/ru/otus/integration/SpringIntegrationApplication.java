@@ -17,7 +17,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
-@IntegrationComponentScan
+//@IntegrationComponentScan
 @EnableIntegration
 public class SpringIntegrationApplication {
 

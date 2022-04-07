@@ -50,32 +50,32 @@ public class IntegrationConfig {
         return IntegrationFlows.from("orderChannel")
                 .split()
                 .<OrderItem, OrderType>route(OrderItem::getOrderType, mapping -> mapping
-                        .channelMapping(OrderType.DRINK, "barChannel")
-                        .channelMapping(OrderType.FOOD, "kitchenChannel")
+                        .channelMapping(OrderType.DRINK, barChannel())
+                        .channelMapping(OrderType.FOOD, kitchenChannel())
                         ).get();
     }
 
     @Bean
     public IntegrationFlow barFlow() {
-        return IntegrationFlows.from("barChannel")
+        return IntegrationFlows.from(barChannel())
                 .handle("barService", "cook")
-                .channel("bringChannel")
+                .channel(bringChannel())
                 .get();
     }
 
     @Bean
     public IntegrationFlow kitchenFlow() {
-        return IntegrationFlows.from("kitchenChannel")
+        return IntegrationFlows.from(kitchenChannel())
                 .handle("kitchenService", "cook")
-                .channel("bringChannel")
+                .channel(bringChannel())
                 .get();
     }
 
     @Bean
     public IntegrationFlow bringFlow() {
-        return IntegrationFlows.from("bringChannel")
+        return IntegrationFlows.from(bringChannel())
                 .aggregate()
-                .channel("servingChanel")
+                .channel(servingChanel())
                 .get();
     }
 
