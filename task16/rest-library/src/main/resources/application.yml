@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+services:
+  yandex:
+    path: https://yandex.ru/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    # Включает информацию о сборке (spring-boot-maven-plugin)
+    build:
+      enabled: true
+    # Включает информацию о приложении из application.yml
+    env:
+      enabled: true
+    # Включает информацию о git (git-commit-id-plugin)
+    git:
+      mode: "full"
+logging:
+  level:
+    root: info
+  file:
+    name: target/app.log
+
+# Собственно, сама информация
+info:
+  app:
+    # Пример фильтрации свойств Maven
+    version: @project.version@
+    author: Sokolov
+    description: Test project task 16
