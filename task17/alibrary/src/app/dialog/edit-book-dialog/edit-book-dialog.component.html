@@ -1,0 +1,98 @@
+
+<mat-dialog-content>
+  <p mat-dialog-title>{{dialogTitle}}</p>
+
+
+  <mat-form-field>
+
+    <mat-label>Название</mat-label>
+    <input
+      #inputTitle
+      (keydown.enter)="onConfirm()"
+
+      [(ngModel)]="tmpTitle"
+
+      matInput>
+
+    <button
+      (click)="tmpTitle= ''"
+
+      *ngIf="tmpTitle.trim().length > 0" aria-label="Clear" class="size25" mat-button
+
+      mat-icon-button matSuffix>
+
+      <mat-icon>clear</mat-icon>
+    </button>
+
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Укажите автора</mat-label>
+
+    <mat-select [(ngModel)]="tmpAuthor" [compareWith] = "compareAuthos" #selectAuthor>
+      <mat-option *ngFor="let author of authors" [value]= "author">
+        {{author.firstName}} {{author.surName}}
+      </mat-option>
+    </mat-select>
+
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Укажите жанр</mat-label>
+
+    <mat-select [(ngModel)]="tmpGenre" [compareWith]="compareGenre" #selectGenre>
+
+      <mat-option *ngFor="let genre of genres" [value]="genre">
+        {{genre.name}}
+      </mat-option>
+    </mat-select>
+
+  </mat-form-field>
+
+
+</mat-dialog-content>
+
+
+<!--  кнопки возможных действий-->
+<mat-dialog-actions>
+
+
+  <div class="col-md-5 col-12 text-left">
+
+    <button
+      (click)="onConfirm()" [disabled]="inputTitle.value.trim().length==0 || selectAuthor.value == null || selectGenre.value == null"
+      color="primary"
+      mat-raised-button>  <!-- если пустой текст - кнопка "Сохранить" будет недоступна -->
+      Сохранить
+    </button>
+
+
+    <button (click)="onCancel()" mat-raised-button>Отмена</button>
+
+  </div>
+
+
+  <!--  возможные операции над задачей-->
+  <div
+    *ngIf="canActivateDeactivate || canDelete"
+
+    class="col-md-7 col-12 text-right"
+  >
+
+    <button
+      (click)="delete()"
+
+      *ngIf="canDelete()"
+
+      class="red"
+      mat-button
+
+    >
+      Удалить
+
+    </button>
+
+  </div>
+
+</mat-dialog-actions>
+

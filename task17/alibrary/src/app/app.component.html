@@ -1,0 +1,18 @@
+<div class="wrapper ">
+    <div class="main-panel">
+        <div class="content">
+            <div class="container-fluid">
+                <app-book-table
+                  [books]="books"
+                  [authors]="authors"
+                  [genres]="genres"
+                  (deleteBook)="deleteBook($event)"
+                  (updateBook)="updateBook($event)"
+                  (addBook)="addBook($event)"
+                >
+                </app-book-table>
+            </div>
+        </div>
+    </div>
+</div>
+
