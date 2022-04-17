@@ -1,0 +1,28 @@
+### Index file
+GET http://localhost:8080/actuator/
+
+### Info
+GET http://localhost:8080/actuator/info/
+
+### Metrics
+GET http://localhost:8080/actuator/metrics/
+
+### Logfile
+GET http://localhost:8080/actuator/logfile/
+
+### Helth
+GET http://localhost:8080/actuator/health/
+
+### Authors
+GET http://localhost:8080/authors/
+
+### Genres
+GET http://localhost:8080/genres/
+
+### Books
+GET http://localhost:8080/books/
+
+### Remarks
+GET http://localhost:8080/remarks/
+
+
