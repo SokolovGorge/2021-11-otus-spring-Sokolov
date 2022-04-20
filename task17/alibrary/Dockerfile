@@ -1,5 +1,4 @@
 FROM node:12.7-alpine as build
-RUN npm install
 ENV PROJECT_DIR=/usr/src/app
 RUN mkdir -p $PROJECT_DIR
 WORKDIR $PROJECT_DIR
