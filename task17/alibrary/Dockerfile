@@ -5,6 +5,7 @@ RUN mkdir -p $PROJECT_DIR
 WORKDIR $PROJECT_DIR
 ADD ./ $PROJECT_DIR
 
+RUN npm install
 RUN npm run build
 
 
