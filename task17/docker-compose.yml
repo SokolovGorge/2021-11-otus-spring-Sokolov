@@ -1,0 +1,22 @@
+version: '3'
+services:
+  restapp:
+    build:
+      context: ./rest-library
+      dockerfile: Dockerfile
+    privileged: true
+    ports:
+      - "8081:8081"
+    networks:
+      - booknw
+  frontapp:
+    build:
+      context: ./alibrary
+      dockerfile: Dockerfile
+    privileged: true
+    ports:
+      - "80:80"
+    networks:
+      - booknw
+networks:
+  booknw:
