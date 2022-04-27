@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: hystrix-dashboard
+server:
+  port: 8788
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+turbine:
+  app-config: rest-library
+  cluster-name-expression: new String("default")
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 30
+    instance-id: ${spring.application.name}:${server.port}
