@@ -1,0 +1,58 @@
+CREATE TABLE CL_USER (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                      LOGIN VARCHAR(255) NOT NULL,
+                      PASSWRD VARCHAR(255) NOT NULL,
+                      FIRST_NAME VARCHAR(255) NOT NULL,
+                      SUR_NAME VARCHAR(255) NOT NULL,
+                      PATH_NAME VARCHAR(255),
+                      EMAIL VARCHAR(64),
+                      TELEPHONE VARCHAR (64),
+                      UNIQUE KEY UQ_LOGIN (LOGIN)
+);
+
+CREATE TABLE CL_PROF (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                      CODE VARCHAR(16) NOT NULL,
+                      NAME VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE CL_AREA(ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                     CODE VARCHAR(16) NOT NULL,
+                     NAME VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE TASK (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                   USER_ID BIGINT NOT NULL,
+                   PROF_ID BIGINT NOT NULL,
+                   AREA_ID BIGINT NOT NULL,
+                   TITLE VARCHAR(1024) NOT NULL,
+                   KEYWORDS VARCHAR(1024),
+                   FOREIGN KEY (USER_ID) REFERENCES CL_USER(ID) ON DELETE CASCADE,
+                   FOREIGN KEY (PROF_ID) REFERENCES CL_PROF(ID),
+                   FOREIGN KEY (AREA_ID) REFERENCES CL_AREA(ID)
+);
+
+CREATE TABLE VACANCY(ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                     SCODE VARCHAR(10) NOT NULL,
+                     SID VARCHAR(24) NOT NULL,
+                     NAME VARCHAR(1024) NOT NULL,
+                     SALARY_MIN BIGINT,
+                     SALARY_MAX BIGINT,
+                     CURRENCY VARCHAR(12),
+                     SCHEDULE VARCHAR(56),
+                     ADDRESS VARCHAR(1024),
+                     ADDR_LAT FLOAT,
+                     ADDR_LNG FLOAT,
+                     EMPLOYER_NAME VARCHAR(1024),
+                     EMPLOYER_URL VARCHAR(512),
+                     REQUIREMENT VARCHAR(1024),
+                     RESPONSIBILITY VARCHAR(1024),
+                     SOURCE_URL VARCHAR(512),
+                     UNIQUE KEY UQ_VACANCY (SCODE, SID)
+);
+
+CREATE TABLE VACANCY_LINK (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                           TASK_ID BIGINT NOT NULL,
+                           VACANCY_ID BIGINT NOT NULL,
+                           FOREIGN KEY (TASK_ID) REFERENCES TASK(ID) ON DELETE CASCADE,
+                           FOREIGN KEY (VACANCY_ID) REFERENCES VACANCY(ID) ON DELETE CASCADE,
+                           UNIQUE KEY UQ_VACANCY_LINK(TASK_ID, VACANCY_ID)
+);

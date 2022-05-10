@@ -1,0 +1,24 @@
+<footer class="footer">
+    <div class="container-fluid">
+        <nav class="float-left">
+            <ul>
+                <li>
+                    <a (click)="openAboutDialog()" class="link">
+                        О приложении
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+
+        <div class="copyright float-right">
+            © {{year | date: 'yyyy'}}
+            <a [href]="site" target="_blank">{{siteName}}</a>
+
+
+        </div>
+    </div>
+
+
+</footer>

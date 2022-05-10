@@ -1,0 +1,123 @@
+<!--контейнер для внедрения слайд-меню-->
+<ng-sidebar-container style=" height: 100vh">
+
+
+    <!--  слайд-меню-->
+    <ng-sidebar
+            (onClosed)="onClosedMenu()"
+            [animate]="true"
+            [autoFocus]="false"
+            [closeOnClickBackdrop]="true"
+            [closeOnClickOutside]="false"
+            [mode]="menuMode"
+            [opened]="menuOpened"
+            [position]="menuPosition"
+            [showBackdrop]="showBackdrop"
+
+
+    >
+        <div class="sidebar"
+             data-color="purple"
+             data-intro="Фильтрация задач, добавление/удаление/редактирование категорий"
+             data-position='right'
+             data-step="1"
+        >
+
+            <app-categories
+                    (addCategory)="addCategory($event)"
+                    (deleteCategory)="deleteCategory($event)"
+                    (searchCategory)="searchCategory($event)"
+                    (selectCategory)="selectCategory($event)"
+                    (updateCategory)="updateCategory($event)"
+
+                    [categories]="categories"
+                    [selectedCategory]="selectedCategory"
+                    [uncompletedCountForCategoryAll]="uncompletedCountForCategoryAll"
+                    [categorySearchValues]="categorySearchValues"
+            ></app-categories>
+
+        </div>
+
+    </ng-sidebar>
+
+
+    <!--  основной контент-->
+    <!--  ng-sidebar-content - над чем будет открываться слайд-меню-->
+    <div ng-sidebar-content>
+
+
+        <div class="main-panel">
+
+            <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+
+                <!--    навигация с шапкой и списком категорий-->
+
+                <app-header
+                        (toggleMenu)="toggleMenu()"
+                        (toggleStat)="toggleStat($event)"
+                        [categoryName]="selectedCategory ? selectedCategory.title: 'Все'"
+                        [showStat]="showStat"
+
+
+                ></app-header>
+
+            </nav>
+
+            <div class="content">
+                <div class="container-fluid">
+
+                    <div data-intro="Список всех задач cо статистикой"
+                         data-position='top'
+                         data-step="2">
+                        <!-- статистика -->
+                        <app-stat
+                                [completeTasksInCategory]= "stat != null ? stat.countCompleted : 0"
+                                [showStat]="showStat"
+                                [totalTasksInCategory]="stat != null ? stat.countTotal : 0"
+                                [uncompleteTasksInCategory]="stat != null ? stat.countUncompleted : 0"
+                        ></app-stat>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12">
+<!--                            [showSearch]="showSearch"-->
+
+<!--                            (searchAction)="searchTasks($event)"-->
+<!--                            (toggleSearch)="toggleSearch($event)"-->
+
+                            <app-tasks
+
+                                    [totalTasksFounded]="totalTasksFounded"
+                                    [tasks]="tasks"
+                                    [categories]="categories"
+                                    [priorities]="priorities"
+                                    [selectedCategory]="selectedCategory"
+                                    [taskSearchValues]="taskSearchValues"
+
+                                    (selectCategory)="selectCategory($event)"
+                                    (filterTasks)="reloadTasks()"
+                                    (addTask)="addTask($event)"
+                                    (deleteTask)="deleteTask($event)"
+                                    (updateTask)="updateTask($event)"
+                                    (paging)="paging($event)"
+
+
+
+                            ></app-tasks>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <app-footer *ngIf="!isMobile"></app-footer>
+
+
+        </div>
+
+    </div>
+
+
+</ng-sidebar-container>
