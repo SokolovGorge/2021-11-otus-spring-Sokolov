@@ -1,0 +1,44 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: vacancy-alarm
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  server:
+    eviction-interval-timer-in-ms: 15000
+  instance:
+    instance-id:
+      ${spring:application:name}:${server:port}
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+logging:
+  level:
+    root: info
+  file:
+    name: target/app.log
+info:
+  app:
+    version: @project.version@
+    author: Sokolov
+    description: Vacancy Alarm

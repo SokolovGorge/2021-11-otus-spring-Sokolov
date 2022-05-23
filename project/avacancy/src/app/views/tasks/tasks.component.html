@@ -1,0 +1,117 @@
+<div id="tasks">
+
+
+    <div class="logo">
+
+        <span class="nav-title">Задачи</span>
+
+        <!--    иконка добавления новой задачу -->
+        <span class="add-icon-area">
+
+          <button (click)="openAddDialog()" class="add-icon" mat-icon-button>
+      <mat-icon>add</mat-icon>
+        </button>
+    </span>
+
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+
+
+            <!--      поиск категорий -->
+            <div class="search-task-area">
+
+                <mat-form-field class="example-full-width">
+                    <input
+
+                        matInput
+                        maxlength="256"
+                        placeholder="Поиск задач"
+
+                        [(ngModel)]="filterTitle"
+                        (ngModelChange)="this.checkFilterChanged()"
+
+                        (keydown.escape)="clearAndSearch()"
+
+                    />
+
+                    <button
+
+                            *ngIf="filterTitle && filterTitle.trim().length > 0"
+                            mat-button matSuffix mat-icon-button
+                            aria-label="Clear"
+
+                            class="search-task-button"
+
+                            (click)="clearAndSearch()"
+
+                    >
+                        <mat-icon>clear</mat-icon>
+                    </button>
+
+                    <button
+                            *ngIf="filterTitle && filterTitle.trim().length > 0"
+                            mat-button matSuffix mat-icon-button
+                            (click)="search()"
+
+                            [ngClass]="{'blink-button' : filterChanged}"
+                    >
+                        <mat-icon>search</mat-icon>
+
+                    </button>
+
+                </mat-form-field>
+
+            </div>
+
+
+
+            <!-- разделитель-->
+            <div class="line"></div>
+
+            <div *ngIf="tasks && tasks.length === 0"><p class="not-found">Ничего не найдено</p></div>
+
+
+            <li
+                    (click)="showTasksByTask(task)" (mouseenter)="showEditIcon(index)"
+
+                    (mouseleave)="showEditIcon(null)"
+
+                    *ngFor="let task of tasks ; let index = index"
+                    [class.active]="task === selectedTask"
+
+
+                    class="nav-item pointer"
+
+            >
+                <a class="nav-link">
+
+                    <!--          название категории-->
+                    <span class="task-title">{{task.title}}</span>
+
+
+                    <!--         кнопка редактирования категории-->
+                    <span class="edit-task-icon-area">
+
+                        <mat-icon
+                            *ngIf="indexMouseMove === index || isMobile"
+                            (click)="$event.stopPropagation(); openEditDialog(task)"
+                            class="edit-task-icon"
+                        >edit
+                        </mat-icon>
+
+                    </span>
+
+
+                    <!--сколько невыполненных задач-->
+                    <!--span class="uncompleted-count"> {{category.uncompletedCount}}</span-->
+
+
+                </a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="sidebar-background"></div>
+
+</div>

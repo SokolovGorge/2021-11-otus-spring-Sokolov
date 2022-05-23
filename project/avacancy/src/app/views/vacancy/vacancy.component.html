@@ -1,0 +1,201 @@
+<div class="row">
+
+
+    <div class="col-md-3 col-sm-12">
+        <!--    поиск задач-->
+
+
+        <mat-form-field>
+            <input
+                #filterInput
+
+                (keydown.escape)="searchVacancyText = ''"
+
+
+                [(ngModel)]="searchVacancyText"
+
+                matInput
+                placeholder="Поиск по названию"
+
+            >
+
+            <button
+                    (click)="searchVacancyText = null"
+
+                    *ngIf="filterInput.value.trim().length > 0"
+
+                    aria-label="Clear" class="clear-icon size25 gray" mat-button
+                    mat-icon-button
+
+                    matSuffix
+            >
+                <mat-icon>clear</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
+     <div class="col-md-3 col-sm-12">
+        <div class="row padding-top-20">
+            <div class="text-left col-7">
+
+                <button (click)="$event.stopPropagation(); searchVacancyText = null;"
+
+                        *ngIf="searchVacancyText != null && searchVacancyText.trim() != ''"
+
+                        aria-label="Clear"
+                        class="nopadding-left"
+                        mat-button
+                        matSuffix
+                >
+                    Сбросить
+                </button>
+
+                <button (click)="reloadVacancies()"
+                        mat-mini-fab color="primary" aria-label="reload vacancies">
+                    <mat-icon>sync</mat-icon>
+                </button>
+
+            </div>
+
+            <div class="text-right col-5">
+
+                <!--button (click)="openAddTaskDialog()" color="primary" mat-raised-button>Добавить</button-->
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 task-list">
+
+
+        <div *ngIf="!isMobile" class="card">
+            <div *ngIf="vacancies && vacancies.length > 0" class="card-body table-responsive">
+
+                <table [dataSource]="dataSource" mat-table matSort>
+
+                    <!--  цвет приоритета  -->
+                    <ng-container matColumnDef="color">
+                        <th *matHeaderCellDef mat-header-cell></th>
+                        <td class="col-color"
+                            mat-cell></td>
+                    </ng-container>
+
+                    <!-- нумерация-->
+                    <ng-container matColumnDef="id">
+                        <th *matHeaderCellDef mat-header-cell></th>
+                        <td *matCellDef="let index = index;" class="col-id" mat-cell>
+
+                            {{index + 1 + vacancySearchValues.pageNumber * vacancySearchValues.pageSize}}
+
+                        </td>
+                    </ng-container>
+
+
+                    <!-- название вакансии-->
+                    <ng-container matColumnDef="name">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Название</th>
+                        <td (click)="openEditVacancyDialog(vacancy)" *matCellDef="let vacancy"
+                            class="col-title pointer"
+                            mat-cell
+                        >
+                            {{vacancy.name}}
+
+                        </td>
+                    </ng-container>
+
+                    <!-- работодатель -->
+                    <ng-container matColumnDef="employerName">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>Работодатель</th>
+                        <td (click)="openEditVacancyDialog(vacancy)" *matCellDef="let vacancy"
+                            class="col-employer pointer"
+                            mat-cell
+                        >
+                            {{vacancy.employerName}}
+
+                        </td>
+                    </ng-container>
+
+                    <!-- оклад мин-->
+                    <ng-container matColumnDef="salaryMin">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>Оклад (мин)</th>
+                        <td (click)="openEditVacancyDialog(vacancy)" *matCellDef="let vacancy"
+                            class="col-salary pointer"
+                            mat-cell
+                        >
+                            {{vacancy.salaryMin}}
+
+                        </td>
+                    </ng-container>
+                    <!-- оклад макс-->
+                    <ng-container matColumnDef="salaryMax">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>Оклад (макс)</th>
+                        <td (click)="openEditVacancyDialog(vacancy)" *matCellDef="let vacancy"
+                            class="col-salary pointer"
+                            mat-cell
+                        >
+                            {{vacancy.salaryMax}}
+
+                        </td>
+                    </ng-container>
+
+                    <!-- url -->
+                    <ng-container matColumnDef="sourceUrl">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                        <td *matCellDef="let vacancy"
+                            class="col-url pointer"
+                            mat-cell
+                        >
+                            <a href= {{vacancy.sourceUrl}} target="_blank">Ссылка</a>
+
+                        </td>
+                    </ng-container>
+
+                    <!--доступные действия над вакансией-->
+                    <!--ng-container matColumnDef="operations">
+                        <th *matHeaderCellDef mat-header-cell></th>
+                        <td *matCellDef="let vacancy"  class="col-operations" mat-cell>
+
+                            <button (click)="openDeleteDialog(vacancy)" class="delete-icon"
+                                    mat-icon-button
+                            >
+                                <mat-icon aria-hidden="false">delete</mat-icon>
+                            </button>
+
+
+                            <button (click)="openEditVacancyDialog(vacancy)" class="edit-icon"
+                                    mat-icon-button
+                            >
+
+                                <mat-icon aria-hidden="false">edit</mat-icon>
+                            </button>
+
+                        </td>
+                    </ng-container-->
+
+
+                    <!--  заголовок таблицы-->
+                    <tr *matHeaderRowDef="displayedColumns; " mat-header-row></tr>
+
+                    <!--  строки таблицы - набор строк из тегов td (порядок указывается в переменной displayedColumns) -->
+                    <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+
+                </table>
+
+                <mat-paginator (page)="pageChanged($event)" [pageIndex]="vacancySearchValues.pageNumber"
+                               [pageSize]="vacancySearchValues.pageSize" [length]="totalVacanciesFounded"
+                               [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+
+
+            </div>
+
+            <div *ngIf="vacancies && vacancies.length == 0"><p class="not-found">Ничего не найдено</p></div>
+
+        </div>
+
+
+        <div *ngIf="isMobile && vacancies.length == 0">
+            <p class="not-found">Ничего не найдено</p>
+        </div>
+
+    </div>
+
+</div>

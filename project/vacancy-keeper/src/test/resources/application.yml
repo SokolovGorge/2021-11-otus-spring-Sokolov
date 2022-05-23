@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/test
+    username: vacancy
+    password: vacancy
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

@@ -1,0 +1,111 @@
+<!--создание/редактирование категории-->
+
+
+<mat-dialog-content>
+    <p mat-dialog-title>{{dialogTitle}}</p>
+
+
+    <mat-form-field>
+        <mat-label>Название</mat-label>
+        <input
+            #inputTitle
+            (keydown.enter)="onConfirm()" [(ngModel)]="tmpTitle"
+            matInput
+        />
+
+        <button
+                (click)="tmpTitle= ''"
+
+                *ngIf="tmpTitle && tmpTitle.trim().length > 0"
+                aria-label="Clear" class="clear-icon size25" mat-button mat-icon-button
+                matSuffix
+        >
+            <mat-icon>clear</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <!--    выпадающий список профессий-->
+    <mat-form-field>
+        <mat-label>Укажите профессию</mat-label>
+
+        <mat-select [(ngModel)]="tmpProfessional" [compareWith]="compareProfessional">
+            <!--mat-option [value]="null">Без професии</mat-option-->
+
+            <mat-option *ngFor="let p of professionals" [value]="p">
+                {{p.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!--    выпадающий список городов-->
+    <mat-form-field>
+        <mat-label>Укажите город</mat-label>
+
+        <mat-select [(ngModel)]="tmpArea" [compareWith]="compareArea">
+            <!--mat-option [value]="null">Без города</mat-option-->
+
+            <mat-option *ngFor="let p of areas" [value]="p">
+                {{p.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Ключевые слова</mat-label>
+        <input
+            (keydown.enter)="onConfirm()" [(ngModel)]="tmpKeywords"
+            matInput
+        />
+
+        <button
+                (click)="tmpKeywords= ''"
+
+                *ngIf="tmpKeywords && tmpKeywords.trim().length > 0"
+                aria-label="Clear" class="clear-icon size25" mat-button mat-icon-button
+                matSuffix
+        >
+            <mat-icon>clear</mat-icon>
+        </button>
+    </mat-form-field>
+
+</mat-dialog-content>
+
+
+<!--  кнопки возможных действий-->
+<mat-dialog-actions>
+
+    <div class="col-12 text-center">
+
+        <button
+                (click)="onConfirm()" [disabled]="inputTitle.value.trim().length==0"
+                color="primary"
+                mat-raised-button
+        >
+            Сохранить
+        </button>
+
+        <button (click)="onCancel()" mat-raised-button>Отмена</button>
+
+    </div>
+
+
+    <div class="col-12 text-center">
+
+
+        <button
+                (click)="delete()"
+                *ngIf="canDelete"
+                class="red" mat-button>
+
+            Удалить
+
+        </button>
+
+
+    </div>
+
+
+</mat-dialog-actions>
+
+
+

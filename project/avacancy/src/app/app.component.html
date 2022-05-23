@@ -1,0 +1,108 @@
+<!--контейнер для внедрения слайд-меню-->
+<ng-sidebar-container style=" height: 100vh">
+
+
+    <!--  слайд-меню-->
+    <ng-sidebar
+            (onClosed)="onClosedMenu()"
+            [animate]="true"
+            [autoFocus]="false"
+            [closeOnClickBackdrop]="true"
+            [closeOnClickOutside]="false"
+            [mode]="menuMode"
+            [opened]="menuOpened"
+            [position]="menuPosition"
+            [showBackdrop]="showBackdrop"
+
+
+    >
+        <div class="sidebar"
+             data-color="purple"
+             data-intro="Фильтрация задач, добавление/удаление/редактирование категорий"
+             data-position='right'
+             data-step="1"
+        >
+
+            <app-tasks
+                    (addTask)="addTask($event)"
+                    (deleteTask)="deleteTask($event)"
+                    (searchTask)="searchTasks($event)"
+                    (selectTask)="selectTask($event)"
+                    (updateTask)="updateTask($event)"
+
+                    [tasks]="tasks"
+                    [areas]="areas"
+                    [professionals]="professionals"
+                    [selectedTask]="selectedTask"
+                    [taskSearchValues]="taskSearchValues"
+            ></app-tasks>
+
+        </div>
+
+    </ng-sidebar>
+
+
+    <!--  основной контент-->
+    <!--  ng-sidebar-content - над чем будет открываться слайд-меню-->
+    <div ng-sidebar-content>
+
+
+        <div class="main-panel">
+
+            <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+
+                <!--    навигация с шапкой и списком категорий-->
+
+                <app-header
+                        (toggleMenu)="toggleMenu()"
+                        [categoryName]="selectedTask ? selectedTask.title: 'Все'"
+
+
+                ></app-header>
+
+            </nav>
+
+            <div class="content">
+                <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col-12">
+<!--                            [showSearch]="showSearch"-->
+
+<!--                            (searchAction)="searchTasks($event)"-->
+<!--                            (toggleSearch)="toggleSearch($event)"-->
+
+                            <app-vacancies
+
+                                    [totalVacanciesFounded]="totalVacanciesFounded"
+                                    [vacancies]="vacancies"
+                                    [categories]="tasks"
+                                    [selectedTask]="selectedTask"
+                                    [vacancySearchValues]="vacancySearchValues"
+
+                                    (selectTask)="selectTask($event)"
+                                    (filterVacancies)="reloadVacancies()"
+                                    (addVacancy)="addVacancy($event)"
+                                    (deleteVacancy)="deleteVacancy($event)"
+                                    (updateVacancy)="updateVacancy($event)"
+                                    (paging)="paging($event)"
+
+
+
+                            ></app-vacancies>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <app-footer *ngIf="!isMobile"></app-footer>
+
+
+        </div>
+
+    </div>
+
+
+</ng-sidebar-container>
