@@ -1,58 +1,69 @@
-CREATE TABLE CL_USER (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                      LOGIN VARCHAR(255) NOT NULL,
-                      PASSWRD VARCHAR(255) NOT NULL,
-                      FIRST_NAME VARCHAR(255) NOT NULL,
-                      SUR_NAME VARCHAR(255) NOT NULL,
-                      PATH_NAME VARCHAR(255),
-                      EMAIL VARCHAR(64),
-                      TELEPHONE VARCHAR (64),
-                      UNIQUE KEY UQ_LOGIN (LOGIN)
+DROP SCHEMA IF EXISTS VACANCY CASCADE;
+CREATE SCHEMA VACANCY AUTHORIZATION vacancy;
+GRANT ALL ON SCHEMA VACANCY TO vacancy;
+
+CREATE TABLE VACANCY.CL_USER (ID BIGSERIAL NOT NULL,
+                              LOGIN TEXT NOT NULL,
+                              PASSWRD TEXT NOT NULL,
+                              FIRST_NAME TEXT NOT NULL,
+                              SUR_NAME TEXT NOT NULL,
+                              PATH_NAME TEXT,
+                              EMAIL TEXT,
+                              TELEPHONE TEXT,
+                              CONSTRAINT PK_CL_USER PRIMARY KEY (ID),
+                              CONSTRAINT UQ_LOGIN UNIQUE (LOGIN)
 );
 
-CREATE TABLE CL_PROF (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                      CODE VARCHAR(16) NOT NULL,
-                      NAME VARCHAR(255) NOT NULL
+CREATE TABLE VACANCY.CL_PROF (ID BIGSERIAL NOT NULL,
+                              CODE TEXT NOT NULL,
+                              NAME TEXT NOT NULL,
+                              CONSTRAINT PK_CL_PROF PRIMARY KEY (ID)
 );
 
-CREATE TABLE CL_AREA(ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                     CODE VARCHAR(16) NOT NULL,
-                     NAME VARCHAR(255) NOT NULL
+CREATE TABLE VACANCY.CL_AREA(ID BIGSERIAL NOT NULL,
+                             CODE TEXT NOT NULL,
+                             NAME TEXT NOT null,
+                             CONSTRAINT PK_CL_AREA PRIMARY KEY (ID)
 );
 
-CREATE TABLE TASK (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                   USER_ID BIGINT NOT NULL,
-                   PROF_ID BIGINT NOT NULL,
-                   AREA_ID BIGINT NOT NULL,
-                   TITLE VARCHAR(1024) NOT NULL,
-                   KEYWORDS VARCHAR(1024),
-                   FOREIGN KEY (USER_ID) REFERENCES CL_USER(ID) ON DELETE CASCADE,
-                   FOREIGN KEY (PROF_ID) REFERENCES CL_PROF(ID),
-                   FOREIGN KEY (AREA_ID) REFERENCES CL_AREA(ID)
+CREATE TABLE VACANCY.TASK (ID BIGSERIAL NOT NULL,
+                           USER_ID BIGINT NOT NULL,
+                           PROF_ID BIGINT NOT NULL,
+                           AREA_ID BIGINT NOT NULL,
+                           TITLE TEXT NOT NULL,
+                           KEYWORDS TEXT,
+                           CONSTRAINT PK_TASK PRIMARY KEY (ID),
+                           FOREIGN KEY (USER_ID) REFERENCES CL_USER(ID) ON DELETE CASCADE,
+                           FOREIGN KEY (PROF_ID) REFERENCES CL_PROF(ID),
+                           FOREIGN KEY (AREA_ID) REFERENCES CL_AREA(ID)
 );
 
-CREATE TABLE VACANCY(ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                     SCODE VARCHAR(10) NOT NULL,
-                     SID VARCHAR(24) NOT NULL,
-                     NAME VARCHAR(1024) NOT NULL,
-                     SALARY_MIN BIGINT,
-                     SALARY_MAX BIGINT,
-                     CURRENCY VARCHAR(12),
-                     SCHEDULE VARCHAR(56),
-                     ADDRESS VARCHAR(1024),
-                     ADDR_LAT FLOAT,
-                     ADDR_LNG FLOAT,
-                     EMPLOYER_NAME VARCHAR(1024),
-                     EMPLOYER_URL VARCHAR(512),
-                     REQUIREMENT VARCHAR(1024),
-                     RESPONSIBILITY VARCHAR(1024),
-                     SOURCE_URL VARCHAR(512),
-                     UNIQUE KEY UQ_VACANCY (SCODE, SID)
+CREATE TABLE VACANCY.VACANCY(ID BIGSERIAL NOT NULL,
+                             SCODE TEXT NOT NULL,
+                             SID TEXT NOT NULL,
+                             NAME TEXT NOT NULL,
+                             SALARY_MIN BIGINT,
+                             SALARY_MAX BIGINT,
+                             CURRENCY TEXT,
+                             SCHEDULE TEXT,
+                             ADDRESS TEXT,
+                             ADDR_LAT FLOAT,
+                             ADDR_LNG FLOAT,
+                             EMPLOYER_NAME TEXT,
+                             EMPLOYER_URL TEXT,
+                             REQUIREMENT TEXT,
+                             RESPONSIBILITY TEXT,
+                             SOURCE_URL TEXT,
+                             CONSTRAINT PK_VACANCY PRIMARY KEY (ID),
+                             CONSTRAINT UQ_VACANCY UNIQUE (SCODE, SID)
 );
 
-CREATE TABLE VACANCY_LINK (ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                           TASK_ID BIGINT NOT NULL,
-                           VACANCY_ID BIGINT NOT NULL,
-                           FOREIGN KEY (TASK_ID) REFERENCES TASK(ID) ON DELETE CASCADE,
-                           FOREIGN KEY (VACANCY_ID) REFERENCES VACANCY(ID) ON DELETE CASCADE,
-                           UNIQUE KEY UQ_VACANCY_LINK(TASK_ID, VACANCY_ID)
+CREATE TABLE VACANCY.VACANCY_LINK (ID BIGSERIAL NOT NULL,
+                                   TASK_ID BIGINT NOT NULL,
+                                   VACANCY_ID BIGINT NOT NULL,
+                                   CONSTRAINT PK_VACANCY_LINK PRIMARY KEY (ID),
+                                   CONSTRAINT UQ_VACANCY_LINK UNIQUE (TASK_ID, VACANCY_ID),
+                                   FOREIGN KEY (TASK_ID) REFERENCES TASK(ID) ON DELETE CASCADE,
+                                   FOREIGN KEY (VACANCY_ID) REFERENCES VACANCY(ID) ON DELETE CASCADE
+
 );

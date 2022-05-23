@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "cl_prof")
+@Table(schema = "vacancy", name = "cl_prof")
 public class Professional {
 
     @Id

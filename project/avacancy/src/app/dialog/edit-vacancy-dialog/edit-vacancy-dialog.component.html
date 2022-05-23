@@ -1,0 +1,85 @@
+<!--редактирование/создания задачи-->
+
+<mat-dialog-content>
+    <p mat-dialog-title>{{dialogTitle}}</p>
+
+
+    <!--название задачи    -->
+    <mat-form-field>
+
+        <mat-label>Название</mat-label>
+        <input
+            #inputTitle
+
+            [(ngModel)]="vacancy.name"
+
+            matInput readonly>
+
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Работодатель</mat-label>
+        <input
+            [(ngModel)]="vacancy.employerName"
+            matInput readonly>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Зарплата от</mat-label>
+        <input
+                [(ngModel)]="vacancy.salaryMin"
+                matInput readonly>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Зарплата до</mat-label>
+        <input
+                [(ngModel)]="vacancy.salaryMax"
+                matInput readonly>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Занятость</mat-label>
+        <input
+                [(ngModel)]="vacancy.schedule"
+                matInput readonly>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Адрес</mat-label>
+        <textarea
+                [(ngModel)]="vacancy.address"
+                matInput readonly></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Требования</mat-label>
+        <textarea
+                [(ngModel)]="vacancy.requirement"
+                matInput readonly></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Обязанности</mat-label>
+        <textarea
+                [(ngModel)]="vacancy.responsibility"
+                matInput readonly></textarea>
+    </mat-form-field>
+
+
+</mat-dialog-content>
+
+
+<!--  кнопки возможных действий-->
+<mat-dialog-actions>
+
+
+    <div [ngClass]="{'text-center': isMobile, 'text-left': !isMobile}" class="col-md-5 col-12">
+
+        <button (click)="onCancel()" color="primary" mat-raised-button>Закрыть</button>
+
+    </div>
+
+
+</mat-dialog-actions>
+

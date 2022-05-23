@@ -1,134 +1,98 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import {Task} from '../../model/Task';
-import {Priority} from '../../model/Priority';
-import {Category} from '../../model/Category';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
-import {OperType} from "../OperType";
-import {DeviceDetectorService} from "ngx-device-detector";
+import {DialogAction, DialogResult} from "../../object/DialogResult";
+import {Task} from "../../model/Task";
+import {Area} from "../../model/Area";
+import {Professional} from "../../model/Professional";
+
 
 @Component({
-  selector: 'app-edit-task-dialog',
-  templateUrl: './edit-task-dialog.component.html',
-  styleUrls: ['./edit-task-dialog.component.css']
+    selector: 'app-edit-task-dialog',
+    templateUrl: './edit-task-dialog.component.html',
+    styleUrls: ['./edit-task-dialog.component.css']
 })
 
-// редактирование/создание задачи
+// создание/редактирование задачи
 export class EditTaskDialogComponent implements OnInit {
 
-  tmpCategory: Category;
-  valueCategory: string;
+    dialogTitle: string; // текст для диалогового окна
+    task: Task;
+    areas: Area[];
+    professionals: Professional[];
+    canDelete: boolean = true;
 
-  categories: Category[];
-  priorities: Priority[];
+    tmpTitle: string;
+    tmpProfessional: Professional;
+    tmpArea: Area;
+    tmpKeywords: string;
 
-  dialogTitle: string; // заголовок окна
-  task: Task; // задача для редактирования/создания
-  operType: OperType;
+    constructor(
+        private  dialogRef: MatDialogRef<EditTaskDialogComponent>, // для работы с текущим диалог. окном
+        @Inject(MAT_DIALOG_DATA) private  data: [Task, Area[], Professional[], string], // данные, которые передали в диалоговое окно
+        private  dialog: MatDialog // для открытия нового диалогового окна (из текущего) - например для подтверждения удаления
+    ) {
+    }
 
-  // сохраняем все значения в отдельные переменные
-  // чтобы изменения не сказывались на самой задаче и можно было отменить изменения
-  tmpTitle: string;
-  tmpPriority: Priority;
-  tmpDateTask: Date;
+    ngOnInit() {
 
-  isMobile: boolean;
+        // получаем переданные в диалоговое окно данные
+        this.task = this.data[0];
+        this.areas = this.data[1];
+        this.professionals = this.data[2];
+        this.dialogTitle = this.data[3];
 
-  constructor(
-      private  dialogRef: MatDialogRef<EditTaskDialogComponent>, // // для возможности работы с текущим диалог. окном
-      @Inject(MAT_DIALOG_DATA) private   data: [Task, Category[], Priority[], string, OperType], // данные, которые передали в диалоговое окно
-      private  dialog: MatDialog, // для открытия нового диалогового окна (из текущего) - например для подтверждения удаления
-      private  deviceService: DeviceDetectorService // для определения типа устройства
+        this.tmpTitle = this.task.title;
+        this.tmpProfessional = this.task.professional;
+        this.tmpArea = this.task.area;
+        this.tmpKeywords = this.task.keywords;
 
-  ) {
+        if (!this.task.id) {
+            this.canDelete = false;
+        }
 
-    this.isMobile = deviceService.isMobile();
-  }
+    }
 
-  ngOnInit() {
-    this.task = this.data[0]; // задача для редактирования/создания
-    this.categories = this.data[1];
-    this.priorities = this.data[2]
-    this.dialogTitle = this.data[3]; // текст для диалогового окна
-    this.operType = this.data[4]; // тип операции
+    // нажали ОК
+    onConfirm(): void {
+        this.task.title = this.tmpTitle;
+        this.task.professional = this.tmpProfessional;
+        this.task.area = this.tmpArea;
+        this.task.keywords = this.tmpKeywords;
+        this.dialogRef.close(new DialogResult(DialogAction.SAVE, this.task));
+    }
 
-    // инициализация начальных значений (записывам в отдельные переменные
-    // чтобы можно было отменить изменения, а то будут сразу записываться в задачу)
-    this.tmpTitle = this.task.title;
-    this.tmpPriority = this.task.priority;
-    this.tmpCategory = this.task.category;
-    this.tmpDateTask = this.task.dateTask;
+    // нажали отмену (ничего не сохраняем и закрываем окно)
+    onCancel(): void {
+        this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
+    }
 
-    this.valueCategory = this.tmpCategory.title;
+    // нажали Удалить
+    delete(): void {
 
-  }
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            maxWidth: '500px',
+            data: {
+                dialogTitle: 'Подтвердите действие',
+                message: `Вы действительно хотите удалить задачу: "${this.task.title}"?`
+            },
+            autoFocus: false
+        });
 
-  // нажали ОК
-  onConfirm(): void {
+        dialogRef.afterClosed().subscribe(result => {
+            if (result.action === DialogAction.OK) {
+                this.dialogRef.close(new DialogResult(DialogAction.DELETE)); // нажали удалить
+            }
+        });
 
-    // считываем все значения для сохранения в поля задачи
-    this.task.title = this.tmpTitle;
-    this.task.priority = this.tmpPriority;
-    this.task.category = this.tmpCategory;
-    this.task.dateTask = this.tmpDateTask;
+    }
 
+    compareArea (area1: Area, area2: Area): boolean {
+        return area1.id === area2.id;
+    }
 
-    // передаем добавленную/измененную задачу в обработчик
-    // что с ним будут делать - уже на задача этого компонента
-    this.dialogRef.close(this.task);
+    compareProfessional (professional1: Professional, professional2: Professional): boolean {
+        return professional1.id === professional2.id;
+    }
 
-  }
-
-  // нажали отмену (ничего не сохраняем и закрываем окно)
-  onCancel(): void {
-    this.dialogRef.close(null);
-  }
-
-  // нажали Удалить
-  delete(): void {
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: '500px',
-      data: {
-        dialogTitle: 'Подтвердите действие',
-        message: `Вы действительно хотите удалить задачу: "${this.task.title}"?`
-      },
-      autoFocus: false
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.dialogRef.close('delete'); // нажали удалить
-      }
-    });
-  }
-
-  // нажали Выполнить (завершить) задачу
-  complete(): void {
-    this.dialogRef.close('complete');
-
-  }
-
-  // делаем статус задачи "незавершенным" (активируем)
-  activate(): void {
-    this.dialogRef.close('activate');
-  }
-
-  // можно ли удалять (для показа/скрытия кнопки)
-  canDelete(): boolean {
-    return this.operType === OperType.EDIT;
-  }
-
-  // можно ли активировать/завершить задачу (для показа/скрытия кнопки)
-  canActivateDesactivate(): boolean {
-    return this.operType === OperType.EDIT;
-  }
-
-  compareCategory (category1: Category, category2: Category): boolean {
-    return category1.id === category2.id;
-  }
-
-  comparePriority (priority1: Priority, priority2: Priority): boolean {
-    return priority1.id === priority2.id;
-  }
 }

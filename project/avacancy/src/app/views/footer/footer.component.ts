@@ -12,8 +12,8 @@ import {AboutDialogComponent} from "../../dialog/about/about-dialog.component";
 // подвал - нижняя часть страницы
 export class FooterComponent implements OnInit {
     year: Date;
-    site = 'http://sbsoft.ru/';
-    siteName = 'SBSOFT';
+    site = 'http://otus.ru/';
+    siteName = 'OTUS';
 
     constructor(private  dialog: MatDialog) {
     }
@@ -29,7 +29,7 @@ export class FooterComponent implements OnInit {
                 autoFocus: false,
                 data: {
                     dialogTitle: 'О программе',
-                    message: 'Мое первое приложение на Angular'
+                    message: 'Поиск вакансий'
                 },
                 width: '400px'
             });

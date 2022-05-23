@@ -1,18 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {Task} from './model/Task';
-import {Category} from "./model/Category";
-import {Priority} from "./model/Priority";
+import {Vacancy} from './model/Vacancy';
+import {Task} from "./model/Task";
 import {zip} from "rxjs";
 import {concatMap, map} from "rxjs/operators";
 import {IntroService} from "./service/intro.service";
 import {DeviceDetectorService} from "ngx-device-detector";
-import {CategoryService} from "./data/impl/CategoryService";
-import {CategorySearchValues, TaskSearchValues} from "./data/dao/search/SearchObjects";
-import {TaskService} from "./data/impl/TaskService";
+import {TaskSearchValues, VacancySearchValues} from "./data/dao/search/SearchObjects";
+import {VacancyService} from "./data/impl/vacancy.service";
 import {PageEvent} from "@angular/material/paginator";
-import {PriorityService} from "./data/impl/PriorityService";
-import {Stat} from "./model/Stat";
-import {StatService} from "./data/impl/StatService";
+import {TaskService} from "./data/impl/task.service";
+import {Area} from "./model/Area";
+import {Professional} from "./model/Professional";
+import {AreaService} from "./data/impl/area-service";
+import {ProfessionalService} from "./data/impl/professional-service";
 
 @Component({
     selector: 'app-root',
@@ -23,22 +23,18 @@ import {StatService} from "./data/impl/StatService";
 // компонент-контейнер (Smart, Container), который управляет другими  компонентами (Dumb, Presentational)
 export class AppComponent implements OnInit {
 
+    vacancies: Vacancy[];
     tasks: Task[];
-    categories: Category[]; // все категории
-    priorities: Priority[];
-    stat: Stat;
+    areas: Area[];
+    professionals: Professional[];
 
 
     showSearch = true;
-    // показать/скрыть статистику
-    showStat = true;
 
     // выбранная категория
-    selectedCategory: Category = null; // null - значит будет выбрана категория "Все"
+    selectedTask: Task = null; // null - значит будет выбрана категория "Все"
 
-    // фильтрация
-    priorityFilter: Priority;
-    statusFilter: boolean;
+     statusFilter: boolean;
 
     // параметры бокового меню с категориями
     menuOpened: boolean; // открыть-закрыть
@@ -52,17 +48,17 @@ export class AppComponent implements OnInit {
 
     uncompletedCountForCategoryAll: number;  // для категории Все
 
-    totalTasksFounded: number; // сколько всего задач найдено
+    totalVacanciesFounded: number; // сколько всего вакансий найдено
 
     // параметры поисков
-    categorySearchValues = new CategorySearchValues();
     taskSearchValues = new TaskSearchValues();
+    vacancySearchValues = new VacancySearchValues();
 
     constructor(
-        private categoryService: CategoryService,
-        private priorityService: PriorityService,
+        private areaService: AreaService,
+        private professionalService: ProfessionalService,
         private taskService: TaskService,
-        private statService: StatService,
+        private vacancyService: VacancyService,
         private introService: IntroService, // вводная справоч. информация с выделением областей
         private deviceService: DeviceDetectorService // для определения типа устройства (моб., десктоп, планшет)
     ) {
@@ -70,8 +66,6 @@ export class AppComponent implements OnInit {
         // определяем тип запроса
         this.isMobile = deviceService.isMobile();
         this.isTablet = deviceService.isTablet();
-
-        this.showStat = true ? !this.isMobile : false; // если моб. устройство, то по-умолчанию не показывать статистику
 
         this.setMenuValues(); // установить настройки меню
 
@@ -82,13 +76,12 @@ export class AppComponent implements OnInit {
         // this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
         // this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
 
-        // заполнить меню с категориями
-        this.fillAllCategories();
+        // заполнить меню с задачами
+        this.fillAllTasks();
 
-        this.fillAllPriorities();
+        this.fillAllAreas();
+        this.fillAllProfessionals();
 
-        // по-умолчанию показать все задачи (будет выбрана категория Все)
-        this.selectCategory(null);
 
         // для мобильных и планшетов - не показывать интро
         if (!this.isMobile && !this.isTablet) {
@@ -98,39 +91,49 @@ export class AppComponent implements OnInit {
 
     }
 
+    fillAllAreas() {
 
-    // заполняет категории и кол-во невыполненных задач по каждой из них (нужно для отображения категорий)
-    fillAllCategories() {
-
-        this.categoryService.getAll().subscribe(result => {
-           this.categories = result;
+        this.areaService.getAll().subscribe(result => {
+           this.areas = result;
         });
 
     }
 
-    fillAllPriorities() {
-        this.priorityService.getAll().subscribe(result => {
-            this.priorities = result;
+    fillAllProfessionals() {
+        this.professionalService.getAll().subscribe(result => {
+            this.professionals = result;
+            });
+    }
+
+    fillAllTasks() {
+        this.taskService.getAll().subscribe(result => {
+            this.tasks = result;
+            // по-умолчанию показать первую
+            if (this.selectedTask == undefined  && this.tasks.length > 0) {
+                this.selectTask(this.tasks[0]);
+            }
+
         });
     }
 
-    // поиск категории
-    searchCategory(categorySearchValues: CategorySearchValues): void {
-        this.categoryService.findCategories(categorySearchValues).subscribe(result => {
-            this.categories = result;
+    // поиск задаче
+    searchTasks(taskSearchValues: TaskSearchValues): void {
+        this.taskService.findTasks(taskSearchValues).subscribe(result => {
+            this.tasks = result;
         });
 
     }
 
 
-    // изменение категории
-    selectCategory(category: Category): void {
+    // изменение задачи
+    selectTask(task: Task): void {
 
-        this.selectedCategory = category;
+        this.selectedTask = task;
 
-        this.taskSearchValues.categoryId = category ? category.id : null;
-
-        this.searchTasks(this.taskSearchValues);
+        if (task != undefined) {
+            this.vacancySearchValues.taskId = task.id;
+            this.searchVacancies(this.vacancySearchValues);
+        }
 
         if (this.isMobile) {
             this.menuOpened = false; // закрываем боковое меню
@@ -138,93 +141,67 @@ export class AppComponent implements OnInit {
 
     }
 
-    // поиск задач
-    searchTasks(taskSearchValues: TaskSearchValues) {
-        this.taskSearchValues = taskSearchValues;
+    // поиск вакансий
+    searchVacancies(vacancySearchValues: VacancySearchValues) {
+        this.vacancySearchValues = vacancySearchValues;
 
-        this.taskService.findTasks(taskSearchValues).subscribe(result => {
-            this.totalTasksFounded = result.totalElements;
-            this.tasks = result.content;
-            this.updateStatistic();
+        this.vacancyService.findTasks(vacancySearchValues).subscribe(result => {
+            this.totalVacanciesFounded = result.totalElements;
+            this.vacancies = result.content;
         })
     }
 
-    updateStatistic() {
-        this.statService.getStat(this.taskSearchValues).subscribe(result => {
-            this.stat = result;
-        });
-    }
-
-    // добавление категории
-    addCategory(category: Category): void {
-        this.categoryService.add(category).subscribe(result => {
-            this.searchCategory(this.categorySearchValues);
-        });
-    }
-
-
-
-    // удаление категории
-    deleteCategory(category: Category) {
-        this.categoryService.delete(category.id).subscribe(result => {
-            this.searchCategory(this.categorySearchValues);
-        });
-    }
-
-    // обновлении категории
-    updateCategory(category: Category): void {
-        this.categoryService.update(category).subscribe(result => {
-            this.searchCategory(this.categorySearchValues);
-        });
-    }
-
     // добавление задачи
-    addTask(task: Task) {
+    addTask(task: Task): void {
         this.taskService.add(task).subscribe(result => {
-            // при вставке - добавляем на текущую страницу без условий
-            let tmpTasks: Task[];
-            tmpTasks = this.tasks.slice();
-            tmpTasks.push(result);
-            this.tasks = tmpTasks;
-            this.updateStatistic()
+            this.searchTasks(this.taskSearchValues);
         });
     }
 
-    // обновление задачи
-    updateTask(task: Task): void {
-        this.taskService.update(task).subscribe(result => {
 
-        });
-    }
 
     // удаление задачи
     deleteTask(task: Task) {
         this.taskService.delete(task.id).subscribe(result => {
-            this.updateTasks();
+            this.searchTasks(this.taskSearchValues);
         });
     }
 
-
-    // фильтрация задач по статусу (все, решенные, нерешенные)
-    onFilterTasksByStatus(status: boolean): void {
-        this.statusFilter = status;
-        this.updateTasks();
+    // обновлении задачи
+    updateTask(task: Task): void {
+        this.taskService.update(task).subscribe(result => {
+            this.searchVacancies(this.vacancySearchValues);
+        });
     }
 
-    // фильтрация задач по приоритету
-    onFilterTasksByPriority(priority: Priority): void {
-        this.priorityFilter = priority;
-        this.updateTasks();
+    // добавление вакансии
+    addVacancy(vacancy: Vacancy) {
+        this.vacancyService.add(vacancy).subscribe(result => {
+            // при вставке - добавляем на текущую страницу без условий
+            let tmpVacancies: Vacancy[];
+            tmpVacancies = this.vacancies.slice();
+            tmpVacancies.push(result);
+            this.vacancies = tmpVacancies;
+        });
+    }
+
+    // обновление вакансий
+    updateVacancy(vacancy: Vacancy): void {
+        this.vacancyService.update(vacancy).subscribe(result => {
+
+        });
+    }
+
+    // удаление вакансии
+    deleteVacancy(vacancy: Vacancy) {
+        this.vacancyService.delete(vacancy.id).subscribe(result => {
+            this.updateVacancies();
+        });
     }
 
     // обновить список задач
-    updateTasks(): void {
-        this.searchTasks(this.taskSearchValues)
-    }
-
-    // показать-скрыть статистику
-    toggleStat(showStat: boolean): void {
-        this.showStat = showStat;
+    updateVacancies(): void {
+        this.searchVacancies(this.vacancySearchValues)
     }
 
     // если закрыли меню любым способом - ставим значение false
@@ -251,22 +228,22 @@ export class AppComponent implements OnInit {
 
     }
 
-    reloadTasks() {
-        this.searchTasks(this.taskSearchValues);
+    reloadVacancies() {
+        this.searchVacancies(this.vacancySearchValues);
     }
 
     // изменили кол-во элементов на странице или перешли на другую страницу
     // с помощью paginator
     paging(pageEvent: PageEvent) {
-        if (this.taskSearchValues.pageSize !== pageEvent.pageSize) {
-            this.taskSearchValues.pageNumber = 0;
+        if (this.vacancySearchValues.pageSize !== pageEvent.pageSize) {
+            this.vacancySearchValues.pageNumber = 0;
         } else {
-            this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+            this.vacancySearchValues.pageNumber = pageEvent.pageIndex;
         }
 
-        this.taskSearchValues.pageSize = pageEvent.pageSize;
+        this.vacancySearchValues.pageSize = pageEvent.pageSize;
 
-        this.searchTasks(this.taskSearchValues);
+        this.searchVacancies(this.vacancySearchValues);
     }
 
 

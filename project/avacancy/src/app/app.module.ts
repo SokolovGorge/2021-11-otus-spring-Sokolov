@@ -2,13 +2,13 @@ import {BrowserModule} from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {CategoriesComponent} from './views/categories/categories.component';
-import {TasksComponent} from "./views/tasks/tasks.component";
+import {TasksComponent} from './views/tasks/tasks.component';
+import {VacancyComponent} from "./views/vacancy/vacancy.component";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {EditTaskDialogComponent} from './dialog/edit-task-dialog/edit-task-dialog.component';
+import {EditVacancyDialogComponent} from './dialog/edit-vacancy-dialog/edit-vacancy-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -24,14 +24,10 @@ import {TaskDatePipe} from './pipe/task-date.pipe';
 import {registerLocaleData} from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {EditCategoryDialogComponent} from './dialog/edit-category-dialog/edit-category-dialog.component';
+import {EditTaskDialogComponent} from './dialog/edit-task-dialog/edit-task-dialog.component';
 import {FooterComponent} from './views/footer/footer.component';
 import {AboutDialogComponent} from './dialog/about/about-dialog.component';
 import {HeaderComponent} from './views/header/header.component';
-import {StatComponent} from './views/stat/stat.component';
-import {StatCardComponent} from "./views/stat/stat-card/stat-card.component";
-import {PrioritiesComponent} from "./views/priorities/priorities.component";
-import {SettingsDialogComponent} from "./dialog/settings-dialog/settings-dialog.component";
 import {ColorPickerModule} from "ngx-color-picker";
 import {EditPriorityDialogComponent} from "./dialog/edit-priority-dialog/edit-priority-dialog.component";
 import {SidebarModule} from "ng-sidebar";
@@ -53,19 +49,15 @@ registerLocaleData(localeRu);
 @NgModule({
     declarations: [
         AppComponent,
-        CategoriesComponent,
         TasksComponent,
-        EditTaskDialogComponent,
+        VacancyComponent,
+        EditVacancyDialogComponent,
         ConfirmDialogComponent,
         TaskDatePipe,
-        EditCategoryDialogComponent,
+        EditTaskDialogComponent,
         FooterComponent,
         AboutDialogComponent,
         HeaderComponent,
-        StatComponent,
-        StatCardComponent,
-        PrioritiesComponent,
-        SettingsDialogComponent,
         EditPriorityDialogComponent
 
     ],
@@ -111,11 +103,10 @@ registerLocaleData(localeRu);
         }
     ],
     entryComponents: [
-        EditTaskDialogComponent,
+        EditVacancyDialogComponent,
         ConfirmDialogComponent,
-        EditCategoryDialogComponent,
+        EditTaskDialogComponent,
         AboutDialogComponent,
-        SettingsDialogComponent,
         EditPriorityDialogComponent
     ],
     bootstrap: [AppComponent]

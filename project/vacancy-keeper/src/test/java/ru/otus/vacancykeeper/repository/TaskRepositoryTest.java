@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.otus.vacancykeeper.domain.User;
@@ -13,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Data Jpa для работы с задачами должен")
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TaskRepositoryTest {
 
     private static final int EXPECTED_TASK_COUNT = 2;
@@ -33,8 +35,8 @@ class TaskRepositoryTest {
         sessionFactory.getStatistics().clear();
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
-        val books = repository.findAll();
-        assertThat(books).isNotNull().hasSize(EXPECTED_TASK_COUNT);
+        val tasks = repository.findAll();
+        assertThat(tasks).isNotNull().hasSize(EXPECTED_TASK_COUNT);
 
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
     }
@@ -48,11 +50,26 @@ class TaskRepositoryTest {
         sessionFactory.getStatistics().clear();
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
-        val books = repository.findTasksByUser(user);
-        assertThat(books).isNotNull().hasSize(EXPECTED_TASK_COUNT);
+        val tasks = repository.findTasksByUserOrderByTitle(user);
+        assertThat(tasks).isNotNull().hasSize(EXPECTED_TASK_COUNT);
 
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
     }
 
+
+    @DisplayName("Возвращать список задач пользователя по названию")
+    @Test
+    void shouldReturnExpectedTasksByUserAndTitle() {
+        User user = em.find(User.class, USER_ID);
+        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
+                .unwrap(SessionFactory.class);
+        sessionFactory.getStatistics().clear();
+        sessionFactory.getStatistics().setStatisticsEnabled(true);
+
+        val tasks = repository.findTasksByUserAndTitle(user, "spring");
+        assertThat(tasks).isNotNull().hasSize(EXPECTED_TASK_COUNT);
+
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
+    }
 
 }

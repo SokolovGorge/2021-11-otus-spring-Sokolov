@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {SettingsDialogComponent} from "../../dialog/settings-dialog/settings-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {IntroService} from "../../service/intro.service";
 import {DeviceDetectorService} from "ngx-device-detector";
@@ -15,9 +14,6 @@ export class HeaderComponent implements OnInit {
 
     @Input()
     categoryName: string;
-
-    @Input()
-    showStat: boolean;
 
     @Output()
     toggleStat = new EventEmitter<boolean>(); // показать/скрыть статистику
@@ -36,22 +32,6 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-    }
-
-    onToggleStat(): void {
-        this.toggleStat.emit(!this.showStat); // вкл/выкл статистику
-    }
-
-    // окно настроек
-    showSettings(): void {
-        const dialogRef = this.dialog.open(SettingsDialogComponent,
-            {
-                autoFocus: false,
-                width: '500px'
-            });
-
-        // никаких действий не требуется после закрытия окна
-
     }
 
     showIntroHelp() {

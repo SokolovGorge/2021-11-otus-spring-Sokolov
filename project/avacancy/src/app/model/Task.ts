@@ -1,20 +1,21 @@
-import {Priority} from "./Priority";
-import {Category} from "./Category";
+import {Professional} from "./Professional";
+import {Area} from "./Area";
+import {User} from "./user";
 
 export class Task {
     id: number;
     title: string;
-    completed: number;
-    priority?: Priority;
-    category?: Category;
-    dateTask?: Date;
+    user? :User;
+    professional?: Professional;
+    area?: Area;
+    keywords?: string;
 
-    constructor(id: number, title: string, completed: number, priority?: Priority, category?: Category, dateTask?: Date) {
+    constructor(id: number, title: string, user?: User, professional?: Professional, area?: Area, keywords?: string) {
         this.id = id;
         this.title = title;
-        this.completed = completed;
-        this.priority = priority;
-        this.category = category;
-        this.dateTask = dateTask;
+        this.user = user;
+        this.professional = professional;
+        this.area = area;
+        this.keywords = keywords;
     }
 }

@@ -4,6 +4,7 @@ import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.otus.vacancykeeper.domain.Task;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Репозиторий на основе Data Jpa для работы с линками вакансий должен")
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class VacancyLinkRepositoryTest {
 
     private static final long TASK_ID1 = 1;

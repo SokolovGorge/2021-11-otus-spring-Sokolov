@@ -1,6 +1,8 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:postgresql://127.0.0.1:5432/test
+    username: vacancy
+    password: vacancy
   sql:
     init:
       mode: always

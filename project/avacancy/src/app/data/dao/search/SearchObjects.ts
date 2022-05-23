@@ -1,18 +1,12 @@
-export class CategorySearchValues{
+export class TaskSearchValues {
     title: string = null;
 }
 
-export class PrioritySearchValues{
-    title: string = null;
-}
-
-export class TaskSearchValues{
+export class VacancySearchValues {
+    taskId: number;
     text: string = null;
-    categoryId: number = null;
-    completed: number = null;
-    priorityId: number = null;
     pageNumber = 0;
-    pageSize = 5;
+    pageSize = 10;
 
     sortColumn = 'title';
     sortDirection = 'asc';

@@ -41,4 +41,4 @@ info:
   app:
     version: @project.version@
     author: Sokolov
-    description: Vacancy Explorer
+    description: Vacancy Alarm
