@@ -1,27 +1,27 @@
 package ru.otus.vacancykeeper.util;
 
+import ru.otus.vacancycommon.dto.VacancyCommon;
 import ru.otus.vacancykeeper.domain.Vacancy;
-import ru.otus.vacancykeeper.dto.VacancyDto;
 
 public class VacancyConverter {
 
-    public static Vacancy dtoToEntity(String scode, VacancyDto vacancyDto) {
+    public static Vacancy dtoToEntity(String scode, VacancyCommon vacancyCommon) {
         final Vacancy vacancy = new Vacancy();
         vacancy.setScode(scode);
-        vacancy.setSid(vacancyDto.getId());
-        vacancy.setName(vacancyDto.getName());
-        vacancy.setSalaryMin(vacancyDto.getSalaryMin());
-        vacancy.setSalaryMax(vacancyDto.getSalaryMax());
-        vacancy.setCurrency(vacancyDto.getCurrency());
-        vacancy.setSchedule(vacancyDto.getSchedule());
-        vacancy.setAddress(vacancyDto.getAddress());
-        vacancy.setAddrLat(vacancyDto.getAddressLat());
-        vacancy.setAddrLng(vacancyDto.getAddressLng());
-        vacancy.setEmployerName(vacancyDto.getEmployerName());
-        vacancy.setEmployerUrl(vacancyDto.getEmployerURL());
-        vacancy.setRequirement(vacancyDto.getRequirement());
-        vacancy.setResponsibility(vacancyDto.getResponsibility());
-        vacancy.setSourceUrl(vacancyDto.getSourceURL());
+        vacancy.setSid(vacancyCommon.getId());
+        vacancy.setName(vacancyCommon.getName());
+        vacancy.setSalaryMin(vacancyCommon.getSalaryMin());
+        vacancy.setSalaryMax(vacancyCommon.getSalaryMax());
+        vacancy.setCurrency(vacancyCommon.getCurrency());
+        vacancy.setSchedule(vacancyCommon.getSchedule());
+        vacancy.setAddress(vacancyCommon.getAddress());
+        vacancy.setAddrLat(vacancyCommon.getAddressLat());
+        vacancy.setAddrLng(vacancyCommon.getAddressLng());
+        vacancy.setEmployerName(vacancyCommon.getEmployerName());
+        vacancy.setEmployerUrl(vacancyCommon.getEmployerURL());
+        vacancy.setRequirement(vacancyCommon.getRequirement());
+        vacancy.setResponsibility(vacancyCommon.getResponsibility());
+        vacancy.setSourceUrl(vacancyCommon.getSourceURL());
         return vacancy;
     }
 

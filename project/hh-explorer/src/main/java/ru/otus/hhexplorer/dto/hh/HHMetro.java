@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class HHMetro {
 
-    private String station_name;
-    private String line_name;
-    private String station_id;
+    private String stationName;
+    private String lineName;
+    private String stationId;
     private double lat;
     private double lng;
 }

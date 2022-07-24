@@ -1,10 +1,10 @@
 package ru.otus.hhexplorer.service;
 
 import org.springframework.stereotype.Component;
-import ru.otus.hhexplorer.dto.common.Vacancy;
-import ru.otus.hhexplorer.dto.common.VacancyPackage;
 import ru.otus.hhexplorer.dto.hh.HHVacancy;
 import ru.otus.hhexplorer.dto.hh.HHVacancyPage;
+import ru.otus.vacancycommon.dto.VacancyCommon;
+import ru.otus.vacancycommon.dto.VacancyPackage;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -13,15 +13,13 @@ import java.util.stream.Collectors;
 public class HHVacancyConverter {
 
     public VacancyPackage convert(HHVacancyPage vacancyPage) {
-        VacancyPackage vacancyPackage = new VacancyPackage();
-        vacancyPackage.setPage(vacancyPage.getPage());
-        vacancyPackage.setPages(vacancyPage.getPages());
-        vacancyPackage.setItems(Arrays.stream(vacancyPage.getItems()).map(this::convert).collect(Collectors.toList()));
-        return vacancyPackage;
+        return new VacancyPackage(Arrays.stream(vacancyPage.getItems()).map(this::convert).collect(Collectors.toList()),
+                vacancyPage.getPage(),
+                vacancyPage.getPages());
     }
 
-    private Vacancy convert(HHVacancy hhvacancy) {
-        final Vacancy vacancy = new Vacancy();
+    private VacancyCommon convert(HHVacancy hhvacancy) {
+        final VacancyCommon vacancy = new VacancyCommon();
         vacancy.setId(hhvacancy.getId());
         vacancy.setName(hhvacancy.getName());
         if (hhvacancy.getSalary() != null) {
@@ -39,7 +37,7 @@ public class HHVacancyConverter {
         }
         if (hhvacancy.getEmployer() != null) {
             vacancy.setEmployerName(hhvacancy.getEmployer().getName());
-            vacancy.setEmployerURL(hhvacancy.getEmployer().getAlternate_url());
+            vacancy.setEmployerURL(hhvacancy.getEmployer().getAlternateUrl());
         }
         if (hhvacancy.getSnippet() != null) {
             vacancy.setRequirement(clearHtmlTags(hhvacancy.getSnippet().getRequirement()));

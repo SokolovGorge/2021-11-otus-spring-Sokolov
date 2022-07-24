@@ -1,8 +1,8 @@
 package ru.otus.vacancykeeper.service;
 
-import ru.otus.vacancykeeper.domain.User;
+import ru.otus.vacancykeeper.domain.SUser;
 
 public interface UserService {
 
-    User getCurrentUser();
+    SUser getCurrentUser();
 }

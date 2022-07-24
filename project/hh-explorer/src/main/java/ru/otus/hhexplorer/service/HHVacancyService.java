@@ -6,9 +6,9 @@ import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import ru.otus.hhexplorer.config.VacancyConfig;
 import ru.otus.hhexplorer.dto.common.RequestItem;
-import ru.otus.hhexplorer.dto.common.VacancyPackage;
 import ru.otus.hhexplorer.dto.hh.HHVacancyPage;
 import ru.otus.hhexplorer.exception.ApplicationException;
+import ru.otus.vacancycommon.dto.VacancyPackage;
 
 import java.util.Objects;
 

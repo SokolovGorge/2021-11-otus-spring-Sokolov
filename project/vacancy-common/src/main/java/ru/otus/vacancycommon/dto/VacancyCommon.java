@@ -1,9 +1,9 @@
-package ru.otus.hhexplorer.dto.common;
+package ru.otus.vacancycommon.dto;
 
 import lombok.Data;
 
 @Data
-public class Vacancy {
+public class VacancyCommon {
 
     private String id;
     private String name;
@@ -19,4 +19,5 @@ public class Vacancy {
     private String requirement;
     private String responsibility;
     private String sourceURL;
+
 }

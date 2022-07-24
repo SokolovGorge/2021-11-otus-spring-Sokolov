@@ -11,7 +11,6 @@ import ru.otus.vacancykeeper.domain.Task;
 import ru.otus.vacancykeeper.domain.Vacancy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Репозиторий на основе Data Jpa для работы с линками вакансий должен")
 @DataJpaTest

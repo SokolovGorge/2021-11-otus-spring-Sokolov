@@ -5,13 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
 @Table(schema = "vacancy", name = "cl_user")
-public class User {
+@NamedEntityGraph(name = "user-role-attribute-entity-graph",
+        attributeNodes = {@NamedAttributeNode("roles")})
+public class SUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +40,11 @@ public class User {
 
     @Column(name = "telephone")
     private String telephone;
+
+    @JoinTable(name = "cl_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Role> roles;
+
 }

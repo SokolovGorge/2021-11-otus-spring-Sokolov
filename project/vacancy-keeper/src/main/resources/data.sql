@@ -2,6 +2,15 @@ insert into cl_user(id, login, passwrd, first_name, sur_name, path_name, email, 
 insert into cl_user(id, login, passwrd, first_name, sur_name, path_name, email, telephone) values (2, 'ivanov', 'ivanov', 'Иван', 'Иванов', 'Иванович', 'ivanov.mail.ru', '+7 915 2345');
 insert into cl_user(id, login, passwrd, first_name, sur_name, path_name, email, telephone) values (3, 'petrov', 'petrov', 'Петр', 'Петров', 'Петрович', 'petrov.mail.ru', '+7 915 4567');
 
+insert into cl_role(id, name) values (1, 'ADMIN');
+insert into cl_role(id, name) values (2, 'USER');
+
+insert into cl_user_role(user_id, role_id) values (1, 1);
+insert into cl_user_role(user_id, role_id) values (1, 2);
+insert into cl_user_role(user_id, role_id) values (2, 2);
+insert into cl_user_role(user_id, role_id) values (3, 2);
+
+
 insert into cl_prof(id, code, name) values (1, '1', 'Автомойщик');
 insert into cl_prof(id, code, name) values (2, '2', 'Автослесарь, автомеханик');
 insert into cl_prof(id, code, name) values (3, '3', 'Мастер-приемщик');

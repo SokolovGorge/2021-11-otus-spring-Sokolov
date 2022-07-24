@@ -2,15 +2,15 @@ package ru.otus.vacancykeeper.explorer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.RestTemplate;
+import ru.otus.vacancycommon.dto.VacancyCommon;
+import ru.otus.vacancycommon.dto.VacancyPackage;
 import ru.otus.vacancykeeper.dto.TaskDto;
-import ru.otus.vacancykeeper.dto.VacancyDto;
-import ru.otus.vacancykeeper.dto.VacancyPackage;
 
 import java.util.Iterator;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class VacancyIterator implements Iterator<List<VacancyDto>> {
+public class VacancyIterator implements Iterator<List<VacancyCommon>> {
 
     private final RestTemplate restTemplate;
 
@@ -26,7 +26,7 @@ public class VacancyIterator implements Iterator<List<VacancyDto>> {
     }
 
     @Override
-    public List<VacancyDto> next() {
+    public List<VacancyCommon> next() {
         VacancyPackage vacancyPackage = restTemplate.getForObject(buildRequest(), VacancyPackage.class);
         assert vacancyPackage != null;
         pages = vacancyPackage.getPages();

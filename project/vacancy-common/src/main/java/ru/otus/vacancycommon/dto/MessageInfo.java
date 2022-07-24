@@ -1,4 +1,4 @@
-package ru.otus.vacancyalarm.dto;
+package ru.otus.vacancycommon.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

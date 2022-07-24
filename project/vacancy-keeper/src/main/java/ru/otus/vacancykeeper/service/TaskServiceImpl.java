@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final TaskRefresherService taskRefresherService;
 
     @Transactional(readOnly = true)
@@ -27,12 +27,12 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     @Override
     public List<Task> findTasksOrderByTitle() {
-        return taskRepository.findTasksByUserOrderByTitle(userService.getCurrentUser());
+        return taskRepository.findTasksByUserOrderByTitle(userServiceImpl.getCurrentUser());
     }
 
     @Override
     public List<Task> findTasksByTitle(String title) {
-        return taskRepository.findTasksByUserAndTitle(userService.getCurrentUser(), title);
+        return taskRepository.findTasksByUserAndTitle(userServiceImpl.getCurrentUser(), title);
     }
 
     @Transactional(readOnly = true)
@@ -46,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
     public Task save(Task task) {
         boolean isNew = task.getId() == null;
         if (null == task.getUser()) {
-            task.setUser(userService.getCurrentUser());
+            task.setUser(userServiceImpl.getCurrentUser());
         }
         Task newTask = taskRepository.save(task);
         if (isNew) {

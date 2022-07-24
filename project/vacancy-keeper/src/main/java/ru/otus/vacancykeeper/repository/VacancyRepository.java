@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.otus.vacancykeeper.domain.Task;
-import ru.otus.vacancykeeper.domain.User;
 import ru.otus.vacancykeeper.domain.Vacancy;
 
 import java.util.List;

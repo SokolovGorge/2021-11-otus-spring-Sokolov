@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.vacancyalarm.dto.MessageInfo;
+import ru.otus.vacancycommon.dto.MessageInfo;
 
 @RestController
 @RequestMapping("/api")

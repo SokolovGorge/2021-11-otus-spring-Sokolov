@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.hhexplorer.dto.common.RequestItem;
-import ru.otus.hhexplorer.dto.common.VacancyPackage;
 import ru.otus.hhexplorer.exception.ApplicationException;
 import ru.otus.hhexplorer.service.VacancyService;
+import ru.otus.vacancycommon.dto.VacancyPackage;
 
 @RestController
 @RequestMapping("/api")

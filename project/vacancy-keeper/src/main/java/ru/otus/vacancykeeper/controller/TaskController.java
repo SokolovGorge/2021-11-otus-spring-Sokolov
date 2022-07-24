@@ -24,8 +24,8 @@ public class TaskController {
         return taskService.findTasksOrderByTitle();
     }
 
-    @GetMapping("id/{id}")
-    public ResponseEntity findById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(taskService.findById(id));
         } catch (NoSuchElementException ex) {
@@ -33,17 +33,17 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping("")
     public ResponseEntity<Task> add(@RequestBody Task task) {
         return ResponseEntity.ok(taskService.save(task));
     }
 
-    @PutMapping("/update")
+    @PutMapping("")
     public ResponseEntity<Task> update(@RequestBody Task task) {
         return ResponseEntity.ok(taskService.save(task));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         taskService.deleteById(id);
         return ResponseEntity.ok().build();

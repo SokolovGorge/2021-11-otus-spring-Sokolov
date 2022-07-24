@@ -5,9 +5,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.otus.vacancycommon.dto.VacancyCommon;
 import ru.otus.vacancykeeper.config.ExplorerConfig;
 import ru.otus.vacancykeeper.dto.TaskDto;
-import ru.otus.vacancykeeper.dto.VacancyDto;
 import ru.otus.vacancykeeper.explorer.VacancyExplorer;
 import ru.otus.vacancykeeper.repository.TaskRepository;
 
@@ -38,7 +38,7 @@ public class TaskRefresherServiceImpl implements TaskRefresherService {
     private void updateByTask(TaskDto taskDto) {
         explorerConfig.getExplorerMap().forEach((key, value) -> {
             VacancyExplorer explorer = new VacancyExplorer(restTemplate, key, value, taskDto);
-            for (List<VacancyDto> vacancies : explorer) {
+            for (List<VacancyCommon> vacancies : explorer) {
                 vacancies.forEach(vacancyDto -> {
                     if (vacancySaver.checkAndSaveVacancy(key, taskDto, vacancyDto)) {
                         messageService.sendAlarm(taskDto, vacancyDto);

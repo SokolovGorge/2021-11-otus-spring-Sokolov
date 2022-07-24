@@ -20,6 +20,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {ConfirmDialogComponent} from './dialog/confirm-dialog/confirm-dialog.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {TaskDatePipe} from './pipe/task-date.pipe';
+import {RequestInterceptor} from "./service/request.interceptor";
 
 import {registerLocaleData} from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
@@ -33,15 +34,12 @@ import {EditPriorityDialogComponent} from "./dialog/edit-priority-dialog/edit-pr
 import {SidebarModule} from "ng-sidebar";
 import {DeviceDetectorModule} from "ngx-device-detector";
 import {RuDateAdapter} from "./service/ru-date-adapter";
-import {HttpClientModule} from "@angular/common/http";
-/*
-import {TASK_URL_TOKEN} from "./data/impl/TaskService";
-import {CATEGORY_URL_TOKEN} from "./data/impl/CategoryService";
-import {PRIORITY_URL_TOKEN} from "./data/impl/PriorityService";
-import {STAT_URL_TOKEN} from "./data/impl/StatService";
-*/
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { APP_INITIALIZER } from '@angular/core';
 import { AppConfigService } from './service/app-config.service';
+import { LoginComponent } from './views/login/login.component';
+import {AppRoutingModule} from "./app-routing/app-routing.module";
+import { HomeComponent } from './views/home/home.component';
 
 
 registerLocaleData(localeRu);
@@ -58,7 +56,9 @@ registerLocaleData(localeRu);
         FooterComponent,
         AboutDialogComponent,
         HeaderComponent,
-        EditPriorityDialogComponent
+        EditPriorityDialogComponent,
+        LoginComponent,
+        HomeComponent
 
     ],
     imports: [
@@ -81,16 +81,14 @@ registerLocaleData(localeRu);
         ColorPickerModule,
         SidebarModule,
         HttpClientModule,
+        AppRoutingModule,
         DeviceDetectorModule.forRoot()
     ],
-    providers: [{provide: DateAdapter, useClass: RuDateAdapter},
+    providers: [
+        {provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: "ru-RU"},
- /*       {provide: TASK_URL_TOKEN, useValue: 'http://localhost:8081/task'},
-        {provide: CATEGORY_URL_TOKEN, useValue: 'http://localhost:8081/category'},
-        {provide: PRIORITY_URL_TOKEN, useValue: 'http://localhost:8081/priority'},
-        {provide: STAT_URL_TOKEN, useValue: 'http://localhost:8081/taskstat'},
-*/
-        {
+        {provide: DateAdapter, useClass: RuDateAdapter},
+         {
             provide: APP_INITIALIZER,
             multi: true,
             deps: [AppConfigService],

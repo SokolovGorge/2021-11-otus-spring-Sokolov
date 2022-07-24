@@ -21,22 +21,22 @@ export class CommonService<T> {
 
   // получить одно значение по id
   public get(id: number): Observable<T> {
-    return this.httpClient.get<T>(this.url + '/id/' + id);
+    return this.httpClient.get<T>(this.url + '/' + id);
   }
 
   // обновить значение
   public update(obj: T): Observable<T> {
-    return this.httpClient.put<T>(this.url + '/update', obj);
+    return this.httpClient.put<T>(this.url, obj);
   }
 
   // удалить значение
   public delete(id: number): Observable<T> {
-    return this.httpClient.delete<T>(this.url + '/delete/' + id);
+    return this.httpClient.delete<T>(this.url + '/' + id);
   }
 
   // добавить значение
   public add(obj: T): Observable<T> {
-    return this.httpClient.post<T>(this.url + '/add', obj);
+    return this.httpClient.post<T>(this.url, obj);
   }
 
 }

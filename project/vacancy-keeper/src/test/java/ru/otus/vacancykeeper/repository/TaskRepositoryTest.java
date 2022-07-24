@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import ru.otus.vacancykeeper.domain.User;
+import ru.otus.vacancykeeper.domain.SUser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,7 +44,7 @@ class TaskRepositoryTest {
     @DisplayName("Возвращать список задач пользователя")
     @Test
     void shouldReturnExpectedTasksByUser() {
-        User user = em.find(User.class, USER_ID);
+        SUser user = em.find(SUser.class, USER_ID);
         SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
                 .unwrap(SessionFactory.class);
         sessionFactory.getStatistics().clear();
@@ -60,7 +60,7 @@ class TaskRepositoryTest {
     @DisplayName("Возвращать список задач пользователя по названию")
     @Test
     void shouldReturnExpectedTasksByUserAndTitle() {
-        User user = em.find(User.class, USER_ID);
+        SUser user = em.find(SUser.class, USER_ID);
         SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
                 .unwrap(SessionFactory.class);
         sessionFactory.getStatistics().clear();

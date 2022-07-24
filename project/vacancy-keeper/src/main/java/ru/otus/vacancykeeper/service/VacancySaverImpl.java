@@ -3,11 +3,11 @@ package ru.otus.vacancykeeper.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.vacancycommon.dto.VacancyCommon;
 import ru.otus.vacancykeeper.domain.Task;
 import ru.otus.vacancykeeper.domain.Vacancy;
 import ru.otus.vacancykeeper.domain.VacancyLink;
 import ru.otus.vacancykeeper.dto.TaskDto;
-import ru.otus.vacancykeeper.dto.VacancyDto;
 import ru.otus.vacancykeeper.repository.TaskRepository;
 import ru.otus.vacancykeeper.repository.VacancyLinkRepository;
 import ru.otus.vacancykeeper.repository.VacancyRepository;
@@ -23,11 +23,11 @@ public class VacancySaverImpl implements  VacancySaver {
 
     @Transactional
     @Override
-    public boolean checkAndSaveVacancy(String scode, TaskDto taskDto, VacancyDto vacancyDto) {
+    public boolean checkAndSaveVacancy(String scode, TaskDto taskDto, VacancyCommon vacancyCommon) {
         Task task = taskRepository.getById(taskDto.getId());
-        Vacancy vacancy = vacancyRepository.findVacancyByScodeAndSid(scode, vacancyDto.getId());
+        Vacancy vacancy = vacancyRepository.findVacancyByScodeAndSid(scode, vacancyCommon.getId());
         if (null == vacancy) {
-            vacancy = vacancyRepository.save(VacancyConverter.dtoToEntity(scode, vacancyDto));
+            vacancy = vacancyRepository.save(VacancyConverter.dtoToEntity(scode, vacancyCommon));
             vacancyLinkRepository.save(new VacancyLink(null, task, vacancy));
             return true;
         }
